@@ -1,0 +1,36 @@
+:root {
+  --clr-theme: hsl(215, 95%, 64%);
+  --clr-theme-light: hsl(210, 100%, 68%);
+  --clr-theme-fade: #EFF1F5;
+
+  --neutral-white: #F9F9F9;
+  --neutral-white-light: #e3e3e3;
+  --neutral-white-fade: #9DA4AF;
+  --neutral-black: #333333;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  color: var(--neutral-black);
+  line-height: 1;
+  margin: 0;
+}
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+}
+
+.main {
+  display: flex;
+  flex: 1;
+
+}
