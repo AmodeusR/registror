@@ -1,10 +1,13 @@
-import { useState } from "react";
-import "./App.css";
+import { Header, Sidebar } from "./components";
+
 
 function App() {
   return (
-    <div className="App">
-      <h1>Oi</h1>
+    <div className="app">
+      <Header />
+      <main className="main">
+        <Sidebar />
+      </main>
     </div>
   );
 }
