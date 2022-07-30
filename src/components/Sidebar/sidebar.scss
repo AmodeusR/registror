@@ -1,0 +1,28 @@
+.sidebar {
+  width: min(100%, 15rem);
+  background-color: var(--neutral-white);
+  border-right: 1px solid var(--clr-theme);
+
+  &__options {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__option {
+    font-weight: 500;
+    padding-block: 1rem;
+    padding-inline: .5rem;
+    text-decoration: none;
+    color: var(--neutral-black);
+    transition: background-color 200ms ease;
+
+    &:hover {
+      background-color: var(--neutral-white-light);
+    }
+  }
+
+  &__selected {
+    background-color: var(--clr-theme);
+    color: white;
+  }
+}
