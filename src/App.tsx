@@ -1,13 +1,14 @@
-import { Header, Sidebar } from "./components";
+import { Header, Sidebar, Main } from "./components";
 
 
 function App() {
   return (
     <div className="app">
       <Header />
-      <main className="main">
+      <div className="main-wrapper">
         <Sidebar />
-      </main>
+        <Main />
+      </div>
     </div>
   );
 }
