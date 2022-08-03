@@ -16,8 +16,14 @@
     color: var(--neutral-black);
     transition: background-color 200ms ease;
 
+    border: none;
+    background: none;
+    font-size: 1rem;
+    font-family: inherit;
+
     &:hover {
       background-color: var(--neutral-white-light);
+      cursor: pointer;
     }
   }
 
