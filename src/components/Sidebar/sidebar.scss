@@ -30,5 +30,11 @@
   &__selected {
     background-color: var(--clr-theme);
     color: white;
+
+    &:hover {
+      cursor: default;
+      background-color: var(--clr-theme);
+      pointer-events: none;
+    }
   }
 }
