@@ -1,0 +1,12 @@
+@mixin defaultInputStyle {
+  font-family: inherit;
+  font-size: 1.15rem;
+  border: 2px solid var(--neutral-white-fade);
+  border-radius: 0.25rem;
+  transition: border-color 200ms ease;
+
+  &:focus-within {
+    outline: none;
+    border-color: var(--clr-theme);
+  }
+}
