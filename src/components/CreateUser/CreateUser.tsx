@@ -3,21 +3,20 @@ import { useForm } from "react-hook-form";
 import DataContext from "../../contexts/data.context";
 import { X } from "phosphor-react";
 import InputLabel from "../InputLabel/InputLabel";
+import CPFInput from "../InputLabel/CPFInput";
 
 import "./create-user.scss";
 
 const CreateUser = () => {
+  const { setIsModalOpen } = useContext(DataContext);
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
+  const { CPF, nome } = errors;
 
-  const { setIsModalOpen } = useContext(DataContext);
-
-  const onSubmission = (data) => {
-    console.log(data);
-  };
+  const onSubmission = () => {};
 
   const handleModalClose = (e: MouseEvent) => {
     const target = e.target as HTMLElement;
@@ -43,24 +42,36 @@ const CreateUser = () => {
 
         <span className="create-user__section-title">Dados pessoais</span>
 
-        <InputLabel register={register} type="text" data="nome" required />
-        <InputLabel register={register} type="number" data="CPF" required />
+        <InputLabel
+          register={register}
+          type="text"
+          data="nome"
+          required="Um nome precisa ser fornecido"
+          error={nome}
+        />
+        <CPFInput
+          register={register}
+          type="number"
+          data="CPF"
+          required="Um CPF precisa ser fornecido"
+          error={CPF}
+        />
 
         <span className="create-user__section-title">Endereço</span>
 
         <InputLabel register={register} type="text" data="cidade" />
         <InputLabel register={register} type="text" data="bairro" />
         <div className="create-user__flex">
-        <InputLabel register={register} type="text" data="rua" />
-        <InputLabel register={register} type="number" data="número" />
+          <InputLabel register={register} type="text" data="rua" />
+          <InputLabel register={register} type="number" data="número" />
         </div>
         <InputLabel register={register} type="text" data="complemento" />
-        <button type="submit" className="create-user__button">Cadastrar</button>
+        <button type="submit" className="create-user__button">
+          Cadastrar
+        </button>
       </form>
     </div>
   );
 };
 
 export default CreateUser;
-
-  

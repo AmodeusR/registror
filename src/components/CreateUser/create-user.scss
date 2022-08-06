@@ -40,6 +40,12 @@
     @include mix.defaultInputStyle;
   }
 
+  &__error {
+    color: crimson;
+    font-size: .75rem;
+    margin-block: 5px 0;
+  }
+
   &__button {
     font-family: inherit;
     font-weight: 600;

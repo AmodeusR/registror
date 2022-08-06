@@ -4,11 +4,14 @@ interface InputLabelProps {
   register: UseFormRegister<FieldValues>;
   type: string;
   data: string;
-  required?: boolean;
+  required?: boolean | string;
+  error?: {
+    message?: string
+  };
 }
 
-const InputLabel = ({ register, type, data, required = false }: InputLabelProps) => {
-
+const InputLabel = ({ register, type, data, required = false, error}: InputLabelProps) => {
+  
   return (
     <div className="create-user__inputlabel">
       <label htmlFor={data} className="create-user__label">
@@ -19,7 +22,13 @@ const InputLabel = ({ register, type, data, required = false }: InputLabelProps)
         className="create-user__input"
         type={type}
         {...register(data, {required: required})}
+        style={{
+          borderColor: error ? "crimson" : ""
+        }}
       />
+      {error &&
+        <p className="create-user__error">{error.message}</p>
+      }
     </div>
   );
 };
