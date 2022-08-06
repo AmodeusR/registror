@@ -7,8 +7,8 @@ import "./header.scss";
 
 const Header = () => {
   const input = useRef<HTMLInputElement>(null);
-  const { isModalOpen, setIsModalOpen } = useContext(DataContext);
-
+  const { isModalOpen, setIsModalOpen, search, setSearch } = useContext(DataContext);
+  
   const handleInputFocus = (e:KeyboardEvent) => {
     const isK = e.key === "k";
 
@@ -35,7 +35,7 @@ const Header = () => {
       <h1 className="header__title">Registro de Visitantes</h1>
       <div className="header__search">
         <label htmlFor="busca">Pesquisa</label>
-        <input type="text" name="busca" id="busca" ref={input} />
+        <input type="text" name="busca" id="busca" ref={input} value={search} onChange={(e) => setSearch(e.target.value)} />
       </div>
       <button type="button" className="header__button" onClick={openModal}>Cadastrar usuário</button>
 
