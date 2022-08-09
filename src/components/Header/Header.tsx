@@ -7,7 +7,7 @@ import "./header.scss";
 
 const Header = () => {
   const input = useRef<HTMLInputElement>(null);
-  const { isModalOpen, setIsModalOpen, search, setSearch } = useContext(DataContext);
+  const { isRegisterModalOpen, setIsRegisterModalOpen, search, setSearch } = useContext(DataContext);
   
   const handleInputFocus = (e:KeyboardEvent) => {
     const isK = e.key === "k";
@@ -21,7 +21,7 @@ const Header = () => {
   }
 
   const openModal = () => {
-    setIsModalOpen(true);
+    setIsRegisterModalOpen(true);
   }
   
   useEffect(() => {
@@ -39,7 +39,7 @@ const Header = () => {
       </div>
       <button type="button" className="header__button" onClick={openModal}>Cadastrar usuário</button>
 
-      {isModalOpen &&
+      {isRegisterModalOpen &&
         <CreateUser />
       }
     </header>

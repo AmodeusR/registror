@@ -8,7 +8,7 @@ import CPFInput from "../InputLabel/CPFInput";
 import "./create-user.scss";
 
 const CreateUser = () => {
-  const { setIsModalOpen } = useContext(DataContext);
+  const { setIsRegisterModalOpen } = useContext(DataContext);
   const {
     register,
     handleSubmit,
@@ -22,7 +22,7 @@ const CreateUser = () => {
     const target = e.target as HTMLElement;
 
     if (target.tagName === "DIV") {
-      setIsModalOpen(false);
+      setIsRegisterModalOpen(false);
     }
   };
 
@@ -37,8 +37,9 @@ const CreateUser = () => {
           weight="bold"
           size={32}
           className="create-user__close-button"
-          onClick={() => setIsModalOpen(false)}
+          onClick={() => setIsRegisterModalOpen(false)}
         />
+
 
         <span className="create-user__section-title">Dados pessoais</span>
 
