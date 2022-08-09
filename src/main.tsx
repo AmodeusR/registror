@@ -3,11 +3,18 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import { DataProvider } from "./contexts/data.context";
 import "./styles/main.scss";
+import { BrowserRouter, Routes, Route } from "react-router-dom"
+import { UserInfoCard } from "./components";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <DataProvider>
-      <App />
-    </DataProvider>
+    <BrowserRouter>
+      <DataProvider>
+        <Routes>
+          <Route path="/" element={<App />} >
+         </Route>
+        </Routes>
+      </DataProvider>
+    </BrowserRouter>
   </React.StrictMode>
 );
