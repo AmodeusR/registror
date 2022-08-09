@@ -3,8 +3,10 @@ import { createContext, ReactNode, useState } from "react";
 interface ContextType {
   selected: null |"users" | "visitors" | "history";
   setSelected: (buttonClicked: selectionOptions) => void;
-  isModalOpen: boolean;
-  setIsModalOpen: (isOpen: boolean) => void;
+  isRegisterModalOpen: boolean;
+  setIsRegisterModalOpen: (isOpen: boolean) => void;
+  userCardInfoModalId: string;
+  setUserCardInfoModalId: (isOpen: string) => void;
   search: string;
   setSearch: (searchTerm: string) => void;
 }
@@ -20,17 +22,21 @@ export type selectionOptions = null |"users" | "visitors" | "history";
 
 export const DataProvider = ({ children }: DataProvider) => {
   const [selected, setSelected] = useState<selectionOptions>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
+  const [userCardInfoModalId, setUserCardInfoModalId] = useState("");
   const [search, setSearch] = useState("");
 
   return (
     <DataContext.Provider value={{
       selected,
       setSelected,
-      isModalOpen,
-      setIsModalOpen,
+      isRegisterModalOpen,
+      setIsRegisterModalOpen,
       search,
-      setSearch
+      setSearch,
+      userCardInfoModalId,
+      setUserCardInfoModalId
+      
     }}>
       { children }
     </DataContext.Provider>
