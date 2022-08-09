@@ -2,9 +2,10 @@ import { useContext, MouseEvent } from "react";
 import DataContext from "../../contexts/data.context";
 import { X } from "phosphor-react";
 import { UserCardProps } from "../Cards/cards.types";
+import { formatCPF } from "../../utils/formatCPF";
+import profilePicturePlaceholder from "../../assets/profile-placeholder.webp";
 
 import "./userinfo.scss";
-import { formatCPF } from "../../utils/formatCPF";
 
 const UserInfoCard = ({
   userPicture,
@@ -38,7 +39,7 @@ const UserInfoCard = ({
             className="create-user__close-button"
             onClick={() => setUserCardInfoModalId("")}
           />
-          <img className="userinfo__image" src={userPicture || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"} alt="" />
+          <img className="userinfo__image" src={userPicture || profilePicturePlaceholder} alt="" />
           <span className="create-user__section-title">Dados pessoais</span>
           
           <div className="userinfo__info">
