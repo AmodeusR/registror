@@ -1,0 +1,47 @@
+.userinfo {
+  
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: .5rem;
+  margin-inline: auto;
+
+  background-color: var(--neutral-white);
+  padding: 2rem;
+  width: min(40rem, 90%);
+  border-radius: .5rem;
+
+  &__image {
+    width: 150px;
+    height: 150px;
+    margin-block: 1rem;
+
+    border-radius: .5rem;
+    object-fit: cover;
+  }
+
+  &__info {
+    align-self: flex-start;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: .9rem;
+    font-weight: 400;
+  }
+
+  &__description {
+    margin: .4rem;
+    font-size: 1.3rem;
+    font-weight: 600;
+    text-transform: capitalize;
+  }
+
+  &__flex {
+    display: flex;
+    align-self: flex-start;
+    justify-content: space-between;
+    width: 60%;
+  }
+}
