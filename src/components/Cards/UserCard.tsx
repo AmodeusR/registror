@@ -1,16 +1,8 @@
+import React, { useContext } from "react";
+import DataContext from "../../contexts/data.context";
 import { formatCPF } from "../../utils/formatCPF";
 import "./card.scss";
-
-interface UserCardProps {
-  userPicture?: string;
-  nome: string;
-  cpf: number;
-  cidade?: string;
-  bairro?: string;
-  rua?: string;
-  numero?: string;
-  complemento?: string;
-}
+import { UserCardProps } from "./cards.types";
 
 const UserCard = ({
   userPicture,
@@ -22,13 +14,20 @@ const UserCard = ({
   numero,
   complemento,
 }: UserCardProps) => {
+  const { setUserCardInfoModalId } = useContext(DataContext);
+
+  const handleClick = (e: React.MouseEvent) => {
+    const target = e.target as HTMLElement;
+    setUserCardInfoModalId(target.id);
+
+  }
 
   return (
-    <button className="card">
+    <button className="card" id={String(cpf)} onClick={(e) => handleClick(e)}>
       <img
         className="card__image"
         src={userPicture}
-        alt="imagem aleatória"
+        alt=""
       />
       <div className="card__section">
         <span className="card__label">nome</span>
