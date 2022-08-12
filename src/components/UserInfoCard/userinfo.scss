@@ -1,3 +1,4 @@
+@use "/src/styles/mixins" as mix;
 .userinfo {
   
   position: relative;
@@ -19,6 +20,10 @@
 
     border-radius: .5rem;
     object-fit: cover;
+
+    &:hover {
+      cursor: pointer;
+    }
   }
 
   &__info {
@@ -43,5 +48,9 @@
     align-self: flex-start;
     justify-content: space-between;
     width: 60%;
+  }
+
+  &__button {
+    @include mix.defaultButtonStyle;
   }
 }
