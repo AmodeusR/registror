@@ -10,3 +10,23 @@
     border-color: var(--clr-theme);
   }
 }
+
+@mixin defaultButtonStyle {
+  font-family: inherit;
+    font-weight: 600;
+    font-size: 1rem;
+    width: 100%;
+    padding: 1rem;
+    margin-top: 1rem;
+
+    color: white;
+    background-color: var(--clr-theme);
+    border: none;
+    border-radius: .25rem;
+    transition: background-color 200ms ease;
+
+    &:hover {
+      cursor: pointer;
+      background-color: var(--clr-theme-light);
+    }
+}
