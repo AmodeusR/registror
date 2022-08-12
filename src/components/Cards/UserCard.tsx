@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
 import DataContext from "../../contexts/data.context";
 import { formatCPF } from "../../utils/formatCPF";
-import "./card.scss";
 import { UserCardProps } from "./cards.types";
+import "./card.scss";
 
 const UserCard = ({
   userPicture,
@@ -16,14 +16,12 @@ const UserCard = ({
 }: UserCardProps) => {
   const { setUserCardInfoModalId } = useContext(DataContext);
 
-  const handleClick = (e: React.MouseEvent) => {
-    const target = e.target as HTMLElement;
-    setUserCardInfoModalId(target.id);
-
+  const handleClick = () => {
+    setUserCardInfoModalId(String(cpf));
   }
 
   return (
-    <button className="card" id={String(cpf)} onClick={(e) => handleClick(e)}>
+    <button className="card" onClick={handleClick}>
       <img
         className="card__image"
         src={userPicture}
