@@ -6,6 +6,7 @@ import { formatCPF } from "../../utils/formatCPF";
 import profilePicturePlaceholder from "../../assets/profile-placeholder.webp";
 
 import "./userinfo.scss";
+import ImageShooterModal from "../ImageShooterModal/ImageShooterModal";
 
 const UserInfoCard = ({
   userPicture,
@@ -17,7 +18,7 @@ const UserInfoCard = ({
   numero,
   complemento,
 }: UserCardProps) => {
-  const { setUserCardInfoModalId } = useContext(DataContext);
+  const { setUserCardInfoModalId, setIsImageModalOpen } = useContext(DataContext);
 
   const handleModalClose = (e: MouseEvent) => {
     const target = e.target as HTMLElement;
@@ -26,6 +27,11 @@ const UserInfoCard = ({
       setUserCardInfoModalId("");
     }
   };
+
+  const handlePictureChange = () => {
+    console.log("funcionando");
+    
+  }
 
   return (
     <div
@@ -39,7 +45,8 @@ const UserInfoCard = ({
             className="create-user__close-button"
             onClick={() => setUserCardInfoModalId("")}
           />
-          <img className="userinfo__image" src={userPicture || profilePicturePlaceholder} alt="" />
+          <img className="userinfo__image" src={userPicture || profilePicturePlaceholder} alt="" onClick={handlePictureChange} />
+          <ImageShooterModal />
           <span className="create-user__section-title">Dados pessoais</span>
           
           <div className="userinfo__info">
@@ -75,7 +82,7 @@ const UserInfoCard = ({
             <h2 className="userinfo__title">Complemento</h2>
             <p className="userinfo__description">{complemento || "Não informado"}</p>
           </div>
-          <button type="button" className="create-user__button">
+          <button type="button" className="userinfo__button">
             Registrar visita
           </button>
         </div>

@@ -4,10 +4,10 @@ import DataContext, { selectionOptions } from "../../contexts/data.context";
 import "./sidebar.scss";
 
 const Sidebar = () => {
-  const { setSelected } = useContext(DataContext);
+  const { setSelectedSidebarTab } = useContext(DataContext);
 
   const handleClick = (buttonClicked: selectionOptions, e: React.MouseEvent<HTMLButtonElement>) => {
-    setSelected(buttonClicked);
+    setSelectedSidebarTab(buttonClicked);
     
     const typeAssertion = e.target as HTMLElement;
     const options = typeAssertion.parentElement?.children;
