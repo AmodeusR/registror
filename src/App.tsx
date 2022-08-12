@@ -16,9 +16,6 @@ function App() {
       const selectedUser = users.find((user: UserCardProps) => user.cpf === Number(userCardInfoModalId));
 
       setUser(selectedUser);
-      console.log(selectedUser);
-      
-
     }
 
     fetchUser();
