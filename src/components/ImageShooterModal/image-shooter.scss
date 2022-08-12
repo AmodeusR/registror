@@ -1,0 +1,17 @@
+@use "/src/styles/mixins" as mix;
+
+.image-shooter {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  top: 0;
+  right: -350px;
+  padding: 1rem;
+  background-color: var(--neutral-white);
+  border-radius: .5rem;
+
+  &__button {
+    @include mix.defaultButtonStyle;
+  }
+}
