@@ -24,8 +24,8 @@ const Main = () => {
 
   return (
     <main className="main-section">
-      {fetchedUsers
-        .filter(({ nome, cpf }) =>
+      {fetchedUsers.length ?
+        fetchedUsers.filter(({ nome, cpf }) =>
           nome.toLowerCase().includes(search.toLowerCase()) ||
           String(cpf).includes(search)
         )
@@ -40,7 +40,9 @@ const Main = () => {
             rua={user.rua}
             numero={user.numero}
           />
-        ))}
+        )) :
+        <p className="main-section__error-message">Banco de dados inacessível.</p>
+      }
     </main>
   );
 };
