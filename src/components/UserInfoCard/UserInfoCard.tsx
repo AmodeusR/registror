@@ -22,8 +22,8 @@ const UserInfoCard = ({
 
   const handleModalClose = (e: MouseEvent) => {
     const target = e.target as HTMLElement;
-
-    if (target.tagName === "DIV") {
+    
+    if (target.id === "background-closer") {
       setUserCardInfoModalId("");
     }
   };
@@ -37,6 +37,7 @@ const UserInfoCard = ({
     <div
       className="create-user-background"
       onClick={(e) => handleModalClose(e)}
+      id="background-closer"
     >
         <div className="userinfo">
           <X
@@ -47,6 +48,7 @@ const UserInfoCard = ({
           />
           <img className="userinfo__image" src={userPicture || profilePicturePlaceholder} alt="" onClick={handlePictureChange} />
           <ImageShooterModal />
+          
           <span className="create-user__section-title">Dados pessoais</span>
           
           <div className="userinfo__info">
