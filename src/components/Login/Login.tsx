@@ -2,7 +2,9 @@ import InputLabel from "../InputLabel/InputLabel";
 import { useForm } from "react-hook-form";
 
 import "./login.scss";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import DataContext from "../../contexts/data.context";
+import { useNavigate } from "react-router-dom";
 
 interface FormProps {
   email: string;
@@ -11,16 +13,22 @@ interface FormProps {
 }
 
 const Login = () => {
+  const { user } = useContext(DataContext);
   const [isRegisterSelected, setIsRegisterSelected] = useState(false);
-
   const {
     register,
     handleSubmit,
     formState: { errors },
     setError,
   } = useForm<FormProps>();
-
   const { email, senha, confirmarSenha } = errors;
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+
+  }, []);
 
   const onSubmission = (data: FormProps) => {
     if (isRegisterSelected && data.senha !== data.confirmarSenha) {
