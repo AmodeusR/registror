@@ -1,11 +1,11 @@
 import React, { useContext } from "react";
 import DataContext from "../../contexts/data.context";
 import { formatCPF } from "../../utils/formatCPF";
-import { UserCardProps } from "./cards.types";
+import { GuestCardProps } from "./cards.types";
 import "./card.scss";
 
-const UserCard = ({
-  userPicture,
+const GuestCard = ({
+  guestPicture,
   nome,
   cpf,
   cidade,
@@ -13,18 +13,18 @@ const UserCard = ({
   rua,
   numero,
   complemento,
-}: UserCardProps) => {
-  const { setUserCardInfoModalId } = useContext(DataContext);
+}: GuestCardProps) => {
+  const { setGuestCardInfoModalId } = useContext(DataContext);
 
   const handleClick = () => {
-    setUserCardInfoModalId(String(cpf));
+    setGuestCardInfoModalId(String(cpf));
   }
 
   return (
     <button className="card" onClick={handleClick}>
       <img
         className="card__image"
-        src={userPicture}
+        src={guestPicture}
         alt=""
       />
       <div className="card__section">
@@ -49,4 +49,4 @@ const UserCard = ({
   );
 };
 
-export default UserCard;
+export default GuestCard;

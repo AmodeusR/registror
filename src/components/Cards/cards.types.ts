@@ -1,5 +1,5 @@
-export interface UserCardProps {
-  userPicture?: string;
+export interface GuestCardProps {
+  guestPicture?: string;
   nome: string;
   cpf: number;
   cidade?: string;

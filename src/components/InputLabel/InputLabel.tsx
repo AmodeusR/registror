@@ -13,13 +13,13 @@ interface InputLabelProps {
 const InputLabel = ({ register, type, data, required = false, error}: InputLabelProps) => {
   
   return (
-    <div className="create-user__inputlabel">
-      <label htmlFor={data} className="create-user__label">
+    <div className="create-guest__inputlabel">
+      <label htmlFor={data} className="create-guest__label">
         {data}
       </label>
       <input
         id={data}
-        className="create-user__input"
+        className="create-guest__input"
         type={type}
         {...register(data, {required: required})}
         style={{
@@ -27,7 +27,7 @@ const InputLabel = ({ register, type, data, required = false, error}: InputLabel
         }}
       />
       {error &&
-        <p className="create-user__error">{error.message}</p>
+        <p className="create-guest__error">{error.message}</p>
       }
     </div>
   );

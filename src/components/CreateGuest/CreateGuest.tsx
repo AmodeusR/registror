@@ -5,14 +5,14 @@ import { X } from "phosphor-react";
 import InputLabel from "../InputLabel/InputLabel";
 import CPFInput from "../InputLabel/CPFInput";
 
-import "./create-user.scss";
+import "./create-guest.scss";
 
-const CreateUser = () => {
+const CreateGuest = () => {
   const { setIsRegisterModalOpen } = useContext(DataContext);
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors }
   } = useForm();
   const { CPF, nome } = errors;
 
@@ -28,20 +28,20 @@ const CreateUser = () => {
 
   return (
     <div
-      className="create-user-background"
+      className="create-guest-background"
       onClick={(e) => handleModalClose(e)}
     >
-      <form onSubmit={handleSubmit(onSubmission)} className="create-user">
+      <form onSubmit={handleSubmit(onSubmission)} className="create-guest">
         <h2>Cadastro de Visitante</h2>
         <X
           weight="bold"
           size={32}
-          className="create-user__close-button"
+          className="create-guest__close-button"
           onClick={() => setIsRegisterModalOpen(false)}
         />
 
 
-        <span className="create-user__section-title">Dados pessoais</span>
+        <span className="create-guest__section-title">Dados pessoais</span>
 
         <InputLabel
           register={register}
@@ -58,16 +58,16 @@ const CreateUser = () => {
           error={CPF}
         />
 
-        <span className="create-user__section-title">Endereço</span>
+        <span className="create-guest__section-title">Endereço</span>
 
         <InputLabel register={register} type="text" data="cidade" />
         <InputLabel register={register} type="text" data="bairro" />
-        <div className="create-user__flex">
+        <div className="create-guest__flex">
           <InputLabel register={register} type="text" data="rua" />
           <InputLabel register={register} type="number" data="número" />
         </div>
         <InputLabel register={register} type="text" data="complemento" />
-        <button type="submit" className="create-user__button">
+        <button type="submit" className="create-guest__button">
           Cadastrar
         </button>
       </form>
@@ -75,4 +75,4 @@ const CreateUser = () => {
   );
 };
 
-export default CreateUser;
+export default CreateGuest;

@@ -24,8 +24,8 @@ const Sidebar = () => {
   return (
     <aside className="sidebar">
       <div className="sidebar__options">
-        <button className="sidebar__option sidebar__selected" onClick={(e) => handleClick("users", e)}>Cadastros</button>
-        <button className="sidebar__option" onClick={(e) => handleClick("visitors", e)}>Visitantes</button>
+        <button className="sidebar__option sidebar__selected" onClick={(e) => handleClick("guests", e)}>Cadastros</button>
+        <button className="sidebar__option" onClick={(e) => handleClick("visiting", e)}>Visitantes</button>
         <button className="sidebar__option" onClick={(e) => handleClick("history", e)}>Histórico de visitas</button>
       </div>
     </aside>

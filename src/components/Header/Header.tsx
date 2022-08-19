@@ -1,7 +1,7 @@
 
 import { useContext, useEffect, useRef } from "react";
 import DataContext from "../../contexts/data.context";
-import CreateUser from "../CreateUser/CreateUser";
+import CreateGuest from "../CreateGuest/CreateGuest";
 import "./header.scss";
 
 
@@ -40,7 +40,7 @@ const Header = () => {
       <button type="button" className="header__button" onClick={openModal}>Cadastrar usuário</button>
 
       {isRegisterModalOpen &&
-        <CreateUser />
+        <CreateGuest />
       }
     </header>
   );

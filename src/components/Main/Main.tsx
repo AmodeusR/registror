@@ -1,22 +1,23 @@
-import UserCard from "../Cards/UserCard";
+import { useContext, useEffect, useState } from "react";
+import DataContext from "../../contexts/data.context";
+
+import GuestCard from "../Cards/GuestCard";
 import VisitorCard from "../Cards/VisitorCard";
 import HistoryCard from "../Cards/HistoryCard";
 
+import { GuestCardProps } from "../Cards/cards.types";
 import "./main.scss";
-import { useContext, useEffect, useState } from "react";
-import DataContext from "../../contexts/data.context";
-import { UserCardProps } from "../Cards/cards.types";
 
 const Main = () => {
   const { search } = useContext(DataContext);
-  const [fetchedUsers, setFetchedUsers] = useState<UserCardProps[]>([]);
+  const [fetchedGuests, setFetchedGuests] = useState<GuestCardProps[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch("http://localhost:3000/users");
+      const response = await fetch("http://localhost:3000/guests");
       const data = await response.json();
 
-      setFetchedUsers(data);
+      setFetchedGuests(data);
     }
 
     fetchData();
@@ -24,21 +25,21 @@ const Main = () => {
 
   return (
     <main className="main-section">
-      {fetchedUsers.length ?
-        fetchedUsers.filter(({ nome, cpf }) =>
+      {fetchedGuests.length ?
+        fetchedGuests.filter(({ nome, cpf }) =>
           nome.toLowerCase().includes(search.toLowerCase()) ||
           String(cpf).includes(search)
         )
-        .map((user) => (
-          <UserCard
-            key={user.cpf}
-            userPicture={user.userPicture}
-            nome={user.nome}
-            cpf={user.cpf}
-            cidade={user.cidade}
-            bairro={user.bairro}
-            rua={user.rua}
-            numero={user.numero}
+        .map((guest) => (
+          <GuestCard
+            key={guest.cpf}
+            guestPicture={guest.guestPicture}
+            nome={guest.nome}
+            cpf={guest.cpf}
+            cidade={guest.cidade}
+            bairro={guest.bairro}
+            rua={guest.rua}
+            numero={guest.numero}
           />
         )) :
         <p className="main-section__error-message">Banco de dados inacessível.</p>

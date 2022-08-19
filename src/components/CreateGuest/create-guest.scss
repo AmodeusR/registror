@@ -1,6 +1,6 @@
 @use "/src/styles/mixins" as mix;
 
-.create-user {
+.create-guest {
   position: relative;
   display: flex;
   align-items: center;
@@ -71,7 +71,7 @@
   }
 }
 
-.create-user-background {
+.create-guest-background {
   display: flex;
   place-items: center;
   position: absolute;
