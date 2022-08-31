@@ -7,7 +7,7 @@ function App() {
   const [guest, setGuest] = useState({} as GuestCardProps);
 
   const { GuestCardInfoModalId } = useContext(DataContext);
-
+  
   useEffect(() => {
     const fetchGuests = async () => {
       const guestsPromise = await fetch("http://localhost:3000/guests");

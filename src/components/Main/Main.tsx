@@ -16,8 +16,9 @@ const Main = () => {
 
   useEffect(() => {
     if (!user) {
-      navigate("/entrar");
+      navigate("/");
     }
+
     const fetchData = async () => {
       const response = await fetch("http://localhost:3000/guests");
       const data = await response.json();
