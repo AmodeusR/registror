@@ -1,19 +1,20 @@
-import InputLabel from "../InputLabel/InputLabel";
 import { useForm } from "react-hook-form";
-
 import "./login.scss";
 import { useContext, useEffect, useState } from "react";
 import DataContext from "../../contexts/data.context";
 import { useNavigate } from "react-router-dom";
+import LoginForm from "./LoginForm";
+import RegisterForm from "./RegisterForm";
+import { useCookies } from "react-cookie";
 
-interface FormProps {
+export interface FormProps {
   email: string;
   senha: string;
   confirmarSenha?: string;
 }
 
 const Login = () => {
-  const { user } = useContext(DataContext);
+  const { setUser } = useContext(DataContext);
   const [isRegisterSelected, setIsRegisterSelected] = useState(false);
   const {
     register,
@@ -21,29 +22,16 @@ const Login = () => {
     formState: { errors },
     setError,
   } = useForm<FormProps>();
-  const { email, senha, confirmarSenha } = errors;
   const navigate = useNavigate();
+  const [cookies, setCookie ] = useCookies(["user"]);
+
   useEffect(() => {
-    if (user) {
-      navigate("/");
+    if (cookies.user) {
+      setUser(cookies.user);
+      navigate("/inicio");
     }
 
   }, []);
-
-  const onSubmission = (data: FormProps) => {
-    if (isRegisterSelected && data.senha !== data.confirmarSenha) {
-      setError(
-        "confirmarSenha",
-        { type: "string", message: "As senhas precisam ser iguais" },
-      );
-      
-      console.log(confirmarSenha);
-      
-      return;
-    }
-
-    console.log("funcionando");
-  };
 
   return (
     <div className="login-background">
@@ -64,73 +52,15 @@ const Login = () => {
             Registrar
           </button>
         </div>
-        <form onSubmit={handleSubmit(onSubmission)} className="login">
-          <div className="create-guest__inputlabel">
-            <label htmlFor="email" className="create-guest__label">
-              Email
-            </label>
-            <input
-              id="email"
-              className="create-guest__input"
-              type="email"
-              {...register("email", {
-                required: "Um email precisa ser fornecido",
-              })}
-              style={{
-                borderColor: email ? "crimson" : "",
-              }}
-            />
-            {email && (
-              <p className="create-guest__error">{String(email.message)}</p>
-            )}
-          </div>
-          <div className="create-guest__inputlabel">
-            <label htmlFor="senha" className="create-guest__label">
-              Senha
-            </label>
-            <input
-              id="senha"
-              className="create-guest__input"
-              type="password"
-              {...register("senha", {
-                required: "Uma senha precisa ser fornecida",
-              })}
-              style={{
-                borderColor: senha ? "crimson" : "",
-              }}
-            />
-            {senha && (
-              <p className="create-guest__error">{String(senha.message)}</p>
-            )}
-          </div>
-          {isRegisterSelected && (
-            <div className="create-guest__inputlabel">
-              <label htmlFor="confirmarSenha" className="create-guest__label">
-                Confirmar senha
-              </label>
-              <input
-                id="confirmarSenha"
-                className="create-guest__input"
-                type="password"
-                {...register("confirmarSenha", {
-                  required: "A senha precisa ser igual a inserida acima",
-                })}
-                style={{
-                  borderColor: senha ? "crimson" : "",
-                }}
-              />
-              {confirmarSenha && (
-                <p className="create-guest__error">
-                  {String(confirmarSenha.message)}
-                </p>
-              )}
-            </div>
-          )}
+        { isRegisterSelected ?
+          <RegisterForm handleSubmit={handleSubmit} register={register} errors={errors} setError={setError} /> :
+          <LoginForm handleSubmit={handleSubmit} register={register} errors={errors} setError={setError} />
+        }
 
-          <button type="submit" className="login__submit">
+          {/* <button type="submit" className="login__submit">
             {isRegisterSelected ? "Registrar" : "Entrar"}
-          </button>
-        </form>
+          </button> */}
+        
       </div>
     </div>
   );
