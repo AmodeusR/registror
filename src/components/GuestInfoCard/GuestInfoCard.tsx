@@ -24,7 +24,7 @@ const GuestInfoCard = ({
     const target = e.target as HTMLElement;
     
     if (target.id === "background-closer") {
-      setGuestCardInfoModalId("");
+      setGuestCardInfoModalId(null);
     }
   };
 
@@ -44,7 +44,7 @@ const GuestInfoCard = ({
             weight="bold"
             size={32}
             className="create-guest__close-button"
-            onClick={() => setGuestCardInfoModalId("")}
+            onClick={() => setGuestCardInfoModalId(null)}
           />
           <img className="guestinfo__image" src={guestPicture || profilePicturePlaceholder} alt="" onClick={handlePictureChange} />
           <ImageShooterModal />
