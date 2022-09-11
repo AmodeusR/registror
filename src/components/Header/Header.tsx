@@ -13,6 +13,7 @@ const Header = () => {
   const { isRegisterModalOpen, setIsRegisterModalOpen, search, setSearch, user } = useContext(DataContext);
   const [cookies, setCookie, removeCookie ] = useCookies(["user"]);
   const navigate = useNavigate();
+  
   const handleSignOut = async () => {
     removeCookie("user");
     await userSignOut();
