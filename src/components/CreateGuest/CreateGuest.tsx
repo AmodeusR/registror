@@ -6,17 +6,30 @@ import InputLabel from "../InputLabel/InputLabel";
 import CPFInput from "../InputLabel/CPFInput";
 
 import "./create-guest.scss";
+import { createNewGuest } from "../../utils/firebase";
+import { GuestCardProps } from "../Cards/cards.types";
 
 const CreateGuest = () => {
-  const { setIsRegisterModalOpen } = useContext(DataContext);
+  const { setIsRegisterModalOpen, setGuestCardInfoModalId } = useContext(DataContext);
   const {
     register,
     handleSubmit,
-    formState: { errors }
-  } = useForm();
-  const { CPF, nome } = errors;
+    formState: { errors },
+    setError
+  } = useForm<GuestCardProps>();
+  const { cpf, nome } = errors;
 
-  const onSubmission = () => {};
+  const onSubmission = async (data: GuestCardProps) => {
+
+    const error = await createNewGuest(data);
+    if (error) {
+      setError("cpf", {type: "string", message: error})
+    } else {
+      setIsRegisterModalOpen(false);
+      setGuestCardInfoModalId(data.cpf);
+    }    
+
+  };
 
   const handleModalClose = (e: MouseEvent) => {
     const target = e.target as HTMLElement;
@@ -53,9 +66,8 @@ const CreateGuest = () => {
         <CPFInput
           register={register}
           type="number"
-          data="CPF"
           required="Um CPF precisa ser fornecido"
-          error={CPF}
+          error={cpf}
         />
 
         <span className="create-guest__section-title">Endereço</span>
@@ -64,7 +76,7 @@ const CreateGuest = () => {
         <InputLabel register={register} type="text" data="bairro" />
         <div className="create-guest__flex">
           <InputLabel register={register} type="text" data="rua" />
-          <InputLabel register={register} type="number" data="número" />
+          <InputLabel register={register} type="number" data="numero" />
         </div>
         <InputLabel register={register} type="text" data="complemento" />
         <button type="submit" className="create-guest__button">
