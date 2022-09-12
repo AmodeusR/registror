@@ -1,9 +1,9 @@
-import { FieldValues, UseFormRegister, UseFormWatch } from "react-hook-form";
+import { UseFormRegister } from "react-hook-form";
+import { GuestCardProps } from "../Cards/cards.types";
 
-interface InputLabelProps {
-  register: UseFormRegister<FieldValues>;
+interface CPFLabelProps {
+  register: UseFormRegister<GuestCardProps>;
   type: string;
-  data: string;
   required?: boolean | string;
   error?: {
     message?: string;
@@ -13,27 +13,29 @@ interface InputLabelProps {
 const CPFInputLabel = ({
   register,
   type,
-  data,
   required = false,
   error,
-}: InputLabelProps) => {
+}: CPFLabelProps) => {
 
   return (
     <div className="create-guest__inputlabel">
-      <label htmlFor={data} className="create-guest__label">
-        {data}
+      <label htmlFor="cpf" className="create-guest__label">
+        CPF
       </label>
       <input
-        id={data}
+        id="cpf"
         className="create-guest__input"
         type={type}
-        {...register(data, {
+        {...register("cpf", {
           required: required,
           minLength: {
             value: 11,
             message: "11 dígitos são necessários"
           },
-          maxLength: 11
+          maxLength: {
+            value: 11,
+            message: "Há mais de 11 dígitos"
+          }
         })}
         style={{
           borderColor: error ? "crimson" : "",
