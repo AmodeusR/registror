@@ -24,25 +24,20 @@ const LoginForm = ({ handleSubmit, register, errors, setError }: LoginFormProps)
   const { email, senha } = errors;
   const { setUser } = useContext(DataContext);
   const navigate = useNavigate();
-  const [cookies, setCookie ] = useCookies(["user"]);
-
-  console.log(cookies);
-  
+  const [cookies, setCookie ] = useCookies(["user"]);  
  
   const onSubmission = async (data: FormProps) => {
-    console.log("Isto é Login");
 
     try {
       const userCredentials = await userLogin({
         email: data.email,
         senha: data.senha
       });
-
-      console.log(userCredentials);
+      
       setUser(userCredentials.user);
       setCookie("user", userCredentials.user, {path: "/"})
 
-      navigate("/inicio"); 
+      navigate("/inicio");
     } catch (error: unknown) {
       console.log(error);
       
