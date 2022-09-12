@@ -5,7 +5,7 @@ import {
   UseFormSetError,
 } from "react-hook-form";
 import { FormProps } from "./Login";
-import { userRegistration } from "../../utils/firebase";
+import { createUserDocument, userRegistration } from "../../utils/firebase";
 import { useContext } from "react";
 import DataContext from "../../contexts/data.context";
 import { FirebaseError } from "firebase/app";
@@ -44,6 +44,7 @@ const LoginForm = ({ handleSubmit, register, errors, setError }: LoginFormProps)
       if (userCredentials !== undefined) {
         setUser(userCredentials.user);
         setCookie("user", userCredentials.user, {path: "/"});
+        createUserDocument(userCredentials.user)
       }
 
       navigate("/inicio");      
