@@ -1,33 +1,14 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import DataContext from "../../contexts/data.context";
-import { useNavigate } from "react-router-dom";
 
 import GuestCard from "../Cards/GuestCard";
 import VisitorCard from "../Cards/VisitorCard";
 import HistoryCard from "../Cards/HistoryCard";
 
-import { GuestCardProps } from "../Cards/cards.types";
 import "./main.scss";
 
 const Main = () => {
-  const { search, user } = useContext(DataContext);
-  const [fetchedGuests, setFetchedGuests] = useState<GuestCardProps[]>([]);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!user) {
-      navigate("/");
-    }
-
-    const fetchData = async () => {
-      const response = await fetch("http://localhost:3000/guests");
-      const data = await response.json();
-
-      setFetchedGuests(data);
-    }
-
-    fetchData();
-  }, []);
+  const { search, fetchedGuests } = useContext(DataContext);
 
   return (
     <main className="main-section">
