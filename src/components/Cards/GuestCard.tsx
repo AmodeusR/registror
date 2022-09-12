@@ -3,6 +3,13 @@ import DataContext from "../../contexts/data.context";
 import { formatCPF } from "../../utils/formatCPF";
 import { GuestCardProps } from "./cards.types";
 import "./card.scss";
+import ProfilePlaceHolder from "../../assets/profile-placeholder.webp";
+
+interface AdressInfoType {
+  cidade: String | undefined;
+  rua: String | undefined;
+  numero: String | undefined;
+}
 
 const GuestCard = ({
   guestPicture,
@@ -17,14 +24,26 @@ const GuestCard = ({
   const { setGuestCardInfoModalId } = useContext(DataContext);
 
   const handleClick = () => {
-    setGuestCardInfoModalId(String(cpf));
+    setGuestCardInfoModalId(cpf);
+  }
+
+  const handleCardAdressInfo = ({ cidade, rua, numero }: AdressInfoType) => {
+    if (cidade && rua && numero) {
+      return `${cidade} – ${rua}, ${numero}`;
+    } else if (cidade && rua) {
+      return `${cidade} – ${rua}`
+    } else if (cidade) {
+      return `${cidade}`;
+    } else {
+      return "Não informado"
+    }
   }
 
   return (
     <button className="card" onClick={handleClick}>
       <img
         className="card__image"
-        src={guestPicture}
+        src={guestPicture || ProfilePlaceHolder}
         alt=""
       />
       <div className="card__section">
@@ -43,7 +62,7 @@ const GuestCard = ({
 
       <div className="card__section">
         <span className="card__label">endereço</span>
-        <p className="card__info">{`${cidade} – ${rua}, ${numero}`}</p>
+        <p className="card__info">{handleCardAdressInfo({cidade, rua, numero})}</p>
       </div>
     </button>
   );
