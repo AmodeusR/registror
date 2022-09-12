@@ -6,11 +6,11 @@ import InputLabel from "../InputLabel/InputLabel";
 import CPFInput from "../InputLabel/CPFInput";
 
 import "./create-guest.scss";
-import { createNewGuest } from "../../utils/firebase";
+import { createNewGuest, fetchFirestoreData } from "../../utils/firebase";
 import { GuestCardProps } from "../Cards/cards.types";
 
 const CreateGuest = () => {
-  const { setIsRegisterModalOpen, setGuestCardInfoModalId } = useContext(DataContext);
+  const { setIsRegisterModalOpen, setGuestCardInfoModalId, user, setFetchedGuests } = useContext(DataContext);
   const {
     register,
     handleSubmit,
@@ -22,9 +22,14 @@ const CreateGuest = () => {
   const onSubmission = async (data: GuestCardProps) => {
 
     const error = await createNewGuest(data);
+
     if (error) {
       setError("cpf", {type: "string", message: error})
     } else {
+      const fetchedData = await fetchFirestoreData(user);
+      if (!fetchedData) return;
+      setFetchedGuests(fetchedData.guests);
+
       setIsRegisterModalOpen(false);
       setGuestCardInfoModalId(data.cpf);
     }    
