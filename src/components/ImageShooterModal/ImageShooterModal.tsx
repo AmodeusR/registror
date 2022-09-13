@@ -13,7 +13,7 @@ interface ImageShooterModalProps {
 }
 
 const ImageShooterModal = ({ cpf, setImageSrc }: ImageShooterModalProps) => {
-  const { setFetchedGuests } = useContext(DataContext);
+  const { fetchedGuests, setFetchedGuests } = useContext(DataContext);
   const webcamRef = useRef<Webcam>(null);
 
   const videoContraints = {
@@ -36,14 +36,9 @@ const ImageShooterModal = ({ cpf, setImageSrc }: ImageShooterModalProps) => {
         img: blobImage,
         userID: cpf
       });
-
-
-      const data = await fetchFirestoreData();
       
-      if (!data) return;
-      
-      const guestToUpdate = data.guests.find((guest: GuestCardProps) => guest.cpf === cpf);
-      const updatedGuest = {...guestToUpdate, guestPicture: userPictureLink};
+      const guestToUpdate = fetchedGuests.filter((guest: GuestCardProps) => guest.cpf === cpf);
+      const updatedGuest = {...guestToUpdate[0], guestPicture: userPictureLink as string};
       
       await updateGuestPicture(updatedGuest);
       
