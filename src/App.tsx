@@ -37,8 +37,8 @@ function App() {
   }, [GuestCardInfoModalId]);
 
   useEffect(() => {
-    const fetchData = async (user: User) => {
-      const data = await fetchFirestoreData(user);
+    const fetchData = async () => {
+      const data = await fetchFirestoreData();
 
       return data;
     }
@@ -47,11 +47,10 @@ function App() {
       setUser(user);
 
       if (user) {
-        const data = await fetchData(user);
+        const data = await fetchData();
 
         if (!data) return;
         setFetchedGuests(data.guests);
-
       }
     });
 
