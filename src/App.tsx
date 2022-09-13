@@ -8,7 +8,7 @@ import DataContext from "./contexts/data.context";
 import { fetchFirestoreData, onAuthStateChangedListener } from "./utils/firebase";
 
 function App() {
-  const { user, setUser } = useContext(DataContext);
+  const { setUser } = useContext(DataContext);
   const [guest, setGuest] = useState({} as GuestCardProps);
   const [ cookies ] = useCookies();
   const navigate = useNavigate();
@@ -25,15 +25,15 @@ function App() {
   }, []);
   
   useEffect(() => {
-    const fetchGuests = async () => {      
+    const setSelectedGuest = async () => {      
       const selectedGuest = fetchedGuests.find((guest: GuestCardProps) => guest.cpf === GuestCardInfoModalId);
-
+      
       if (!selectedGuest) return;
 
       setGuest(selectedGuest);
     }
 
-    fetchGuests();
+    setSelectedGuest();
   }, [GuestCardInfoModalId]);
 
   useEffect(() => {
@@ -48,7 +48,7 @@ function App() {
 
       if (user) {
         const data = await fetchData();
-
+        
         if (!data) return;
         setFetchedGuests(data.guests);
       }
