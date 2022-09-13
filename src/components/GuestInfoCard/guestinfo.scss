@@ -1,6 +1,6 @@
 @use "/src/styles/mixins" as mix;
-.guestinfo {
-  
+
+.guestinfo {  
   position: relative;
   display: flex;
   align-items: center;
@@ -50,7 +50,23 @@
     width: 60%;
   }
 
+  &__buttons {
+    display: flex;
+    width: 100%;
+    gap: .5rem;
+  }
+
   &__button {
     @include mix.defaultButtonStyle;
+
+    &.delete {
+      background-color: crimson;
+      flex-shrink: 4;
+      line-height: 1.2;
+
+      &:hover {
+        background-color: hsl(348, 90%, 50%);
+      }
+    }
   }
 }
