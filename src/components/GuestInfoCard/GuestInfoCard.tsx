@@ -7,6 +7,7 @@ import profilePicturePlaceholder from "../../assets/profile-placeholder.webp";
 
 import "./guestinfo.scss";
 import ImageShooterModal from "../ImageShooterModal/ImageShooterModal";
+import { fetchFirestoreData, removeGuest } from "../../utils/firebase";
 
 const GuestInfoCard = ({
   guestPicture,
@@ -18,7 +19,7 @@ const GuestInfoCard = ({
   numero,
   complemento,
 }: GuestCardProps) => {
-  const { setGuestCardInfoModalId, setIsImageModalOpen, isImageModalOpen } = useContext(DataContext);
+  const { setGuestCardInfoModalId, setIsImageModalOpen, isImageModalOpen, fetchedGuests, setFetchedGuests } = useContext(DataContext);
   const [imageSrc, setImageSrc] = useState<string>("");
 
   const handleModalClose = (e: MouseEvent) => {
@@ -31,6 +32,15 @@ const GuestInfoCard = ({
 
   const handlePictureChange = () => {
     setIsImageModalOpen(!isImageModalOpen);    
+  }
+
+  const handleGuestRemove = async () => {
+    const guestToRemove = fetchedGuests.filter(guest => guest.cpf === cpf)[0];
+    
+    removeGuest(guestToRemove);
+    const data = await fetchFirestoreData();
+    setGuestCardInfoModalId(null);
+    setFetchedGuests(data?.guests);
   }
 
   return (
@@ -86,9 +96,14 @@ const GuestInfoCard = ({
             <h2 className="guestinfo__title">Complemento</h2>
             <p className="guestinfo__description">{complemento || "Não informado"}</p>
           </div>
-          <button type="button" className="guestinfo__button">
-            Registrar visita
-          </button>
+          <div className="guestinfo__buttons">
+            <button type="button" className="guestinfo__button delete" onClick={handleGuestRemove}>
+              Deletar
+            </button>
+            <button type="button" className="guestinfo__button">
+              Registrar visita
+            </button>
+          </div>
         </div>
     </div>
   );
