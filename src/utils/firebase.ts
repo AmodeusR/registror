@@ -16,7 +16,8 @@ import {
   setDoc,
   updateDoc,
   arrayUnion,
-  arrayRemove
+  arrayRemove,
+  FieldValue
 } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
@@ -126,6 +127,21 @@ export const updateGuestPicture = async (guestToUpdate: GuestCardProps) => {
   try {
     await updateDoc(userDocRef, {
       guests: [...guests, guestToUpdate]
+    });
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export const removeGuest = async (guestToRemove: GuestCardProps) => {
+  const currentUser = auth.currentUser;
+  if (!currentUser) return;
+
+  const userDocRef = doc(db, "users", currentUser.uid);
+
+  try {
+    await updateDoc(userDocRef, {
+      guests: arrayRemove(guestToRemove)
     });
   } catch (error) {
     console.log(error);
