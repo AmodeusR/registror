@@ -1,4 +1,4 @@
-import { useContext, MouseEvent } from "react";
+import { useContext, useState, MouseEvent } from "react";
 import DataContext from "../../contexts/data.context";
 import { X } from "phosphor-react";
 import { GuestCardProps } from "../Cards/cards.types";
@@ -18,7 +18,8 @@ const GuestInfoCard = ({
   numero,
   complemento,
 }: GuestCardProps) => {
-  const { setGuestCardInfoModalId, setIsImageModalOpen } = useContext(DataContext);
+  const { setGuestCardInfoModalId, setIsImageModalOpen, isImageModalOpen } = useContext(DataContext);
+  const [imageSrc, setImageSrc] = useState<string>("");
 
   const handleModalClose = (e: MouseEvent) => {
     const target = e.target as HTMLElement;
@@ -29,8 +30,7 @@ const GuestInfoCard = ({
   };
 
   const handlePictureChange = () => {
-    console.log("funcionando");
-    
+    setIsImageModalOpen(!isImageModalOpen);    
   }
 
   return (
@@ -46,8 +46,10 @@ const GuestInfoCard = ({
             className="create-guest__close-button"
             onClick={() => setGuestCardInfoModalId(null)}
           />
-          <img className="guestinfo__image" src={guestPicture || profilePicturePlaceholder} alt="" onClick={handlePictureChange} />
-          <ImageShooterModal />
+          <img className="guestinfo__image" src={imageSrc || guestPicture || profilePicturePlaceholder} alt="" onClick={handlePictureChange} />
+          {isImageModalOpen &&
+            <ImageShooterModal cpf={cpf} setImageSrc={setImageSrc} />
+          }
           
           <span className="create-guest__section-title">Dados pessoais</span>
           

@@ -1,21 +1,56 @@
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import Webcam from "react-webcam";
-
+import DataContext from "../../contexts/data.context";
+import { createBlob } from "../../utils/createBlob";
+import { fetchFirestoreData, updateGuestPicture, uploadUserPicture } from "../../utils/firebase";
+import { GuestCardProps } from "../Cards/cards.types";
 import "./image-shooter.scss";
 
-const ImageShooterModal = () => {
+
+interface ImageShooterModalProps {
+  cpf: number;
+  setImageSrc: (imgSrc: string) => void;
+}
+
+const ImageShooterModal = ({ cpf, setImageSrc }: ImageShooterModalProps) => {
+  const { setFetchedGuests } = useContext(DataContext);
   const webcamRef = useRef<Webcam>(null);
-  const [imageSrc, setImageSrc] = useState<string>("");
 
   const videoContraints = {
     width: 300,
     height: 300,
   };
 
-  const handleScreenshot = () => {
+  const handleScreenshot = async () => {
     if (!webcamRef.current)  return;
 
-    setImageSrc(webcamRef.current.getScreenshot() as string);
+    const imgBase64 = webcamRef.current.getScreenshot();
+    if (imgBase64) {
+      setImageSrc(imgBase64);
+    }
+
+    if (imgBase64) {
+      const blobImage = await createBlob(imgBase64);
+      
+      const userPictureLink = await uploadUserPicture({
+        img: blobImage,
+        userID: cpf
+      });
+
+
+      const data = await fetchFirestoreData();
+      
+      if (!data) return;
+      
+      const guestToUpdate = data.guests.find((guest: GuestCardProps) => guest.cpf === cpf);
+      const updatedGuest = {...guestToUpdate, guestPicture: userPictureLink};
+      
+      await updateGuestPicture(updatedGuest);
+      
+      const updatedData = await fetchFirestoreData();
+      setFetchedGuests(updatedData?.guests);
+    }
+    
   };
 
   return (
@@ -33,7 +68,6 @@ const ImageShooterModal = () => {
       >
         Tirar foto
       </button>
-      <img src={imageSrc} alt="" />
     </div>
   );
 };
