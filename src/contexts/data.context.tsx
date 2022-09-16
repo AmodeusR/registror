@@ -1,9 +1,15 @@
 import { createContext, ReactNode, useState } from "react";
 import { User as FirebaseUser } from "firebase/auth";
-import { GuestCardProps } from "../components/Cards/cards.types";
+import { GuestCardProps, VisitorCardProps, HistoryCardProps } from "../components/Cards/cards.types";
+import { DocumentData, Firestore } from "firebase/firestore";
 
+interface FirestoreData {
+  guests: GuestCardProps[];
+  visiting: VisitorCardProps[];
+  history: HistoryCardProps[];
+}
 interface ContextType {
-  selectedSidebarTab: null |"guests" | "visiting" | "history";
+  selectedSidebarTab: "guests" | "visiting" | "history";
   setSelectedSidebarTab: (buttonClicked: selectionOptions) => void;
   isRegisterModalOpen: boolean;
   setIsRegisterModalOpen: (isOpen: boolean) => void;
@@ -15,8 +21,8 @@ interface ContextType {
   setIsImageModalOpen: (isModalOpen: boolean) => void;
   user: FirebaseUser | null;
   setUser: (user: FirebaseUser | null) => void;
-  fetchedGuests: GuestCardProps[];
-  setFetchedGuests: (guests: GuestCardProps[]) => void;
+  fetchedData: FirestoreData;
+  setFetchedData: (fetchedData: FirestoreData) => void;
 }
 
 const DataContext = createContext({} as ContextType);
@@ -26,16 +32,16 @@ interface DataProvider {
   children: ReactNode;
 }
 
-export type selectionOptions = null |"guests" | "visiting" | "history";
+export type selectionOptions = "guests" | "visiting" | "history";
 
 export const DataProvider = ({ children }: DataProvider) => {
-  const [selectedSidebarTab, setSelectedSidebarTab] = useState<selectionOptions>(null);
+  const [selectedSidebarTab, setSelectedSidebarTab] = useState<selectionOptions>("guests");
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
   const [GuestCardInfoModalId, setGuestCardInfoModalId] = useState<number | null>(null);
   const [search, setSearch] = useState("");
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const [user, setUser] = useState<FirebaseUser | null>(null);
-  const [fetchedGuests, setFetchedGuests] = useState<GuestCardProps[]>([]);
+  const [fetchedData, setFetchedData] = useState<FirestoreData>({guests: [], visiting: [], history: []} as FirestoreData);
 
 
   return (
@@ -52,8 +58,8 @@ export const DataProvider = ({ children }: DataProvider) => {
       setIsImageModalOpen,
       user,
       setUser,
-      fetchedGuests,
-      setFetchedGuests
+      fetchedData,
+      setFetchedData
     }}>
       { children }
     </DataContext.Provider>

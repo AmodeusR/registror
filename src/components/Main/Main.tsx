@@ -8,12 +8,12 @@ import HistoryCard from "../Cards/HistoryCard";
 import "./main.scss";
 
 const Main = () => {
-  const { search, fetchedGuests } = useContext(DataContext);
-
+  const { search, fetchedData, selectedSidebarTab } = useContext(DataContext);
+  
   return (
     <main className="main-section">
-      {fetchedGuests.length ?
-        fetchedGuests.filter(({ nome, cpf }) =>
+      {Object.keys(fetchedData).length !== 0 && fetchedData[selectedSidebarTab].length ?
+        fetchedData[selectedSidebarTab].filter(({ nome, cpf }) =>
           nome.toLowerCase().includes(search.toLowerCase()) ||
           String(cpf).includes(search)
         )

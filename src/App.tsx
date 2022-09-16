@@ -13,7 +13,7 @@ function App() {
   const [ cookies ] = useCookies();
   const navigate = useNavigate();
 
-  const { GuestCardInfoModalId, fetchedGuests, setFetchedGuests } = useContext(DataContext);
+  const { GuestCardInfoModalId, fetchedData, setFetchedData, selectedSidebarTab } = useContext(DataContext);
   
   useEffect(() => {
     
@@ -25,8 +25,8 @@ function App() {
   }, []);
   
   useEffect(() => {
-    const setSelectedGuest = async () => {      
-      const selectedGuest = fetchedGuests.find((guest: GuestCardProps) => guest.cpf === GuestCardInfoModalId);
+    const setSelectedGuest = async () => {
+      const selectedGuest = fetchedData["guests"].find((guest: GuestCardProps) => guest.cpf === GuestCardInfoModalId);
       
       if (!selectedGuest) return;
 
@@ -50,7 +50,7 @@ function App() {
         const data = await fetchData();
         
         if (!data) return;
-        setFetchedGuests(data.guests);
+        setFetchedData(data);        
       }
     });
 

@@ -83,8 +83,8 @@ export const fetchFirestoreData = async () => {
   const userDocRef = doc(db, "users", currentUser.uid);
   const dataSnapshot = await getDoc(userDocRef);
   const data = dataSnapshot.data();
-
-  return data;
+  
+  return Object(data);
 };
 
 export const createNewGuest = async (newGuest: GuestCardProps) => {
