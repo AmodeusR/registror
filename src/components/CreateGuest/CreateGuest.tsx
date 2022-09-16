@@ -10,7 +10,7 @@ import { createNewGuest, fetchFirestoreData } from "../../utils/firebase";
 import { GuestCardProps } from "../Cards/cards.types";
 
 const CreateGuest = () => {
-  const { setIsRegisterModalOpen, setGuestCardInfoModalId, setFetchedGuests } = useContext(DataContext);
+  const { setIsRegisterModalOpen, setGuestCardInfoModalId, setFetchedData } = useContext(DataContext);
   const {
     register,
     handleSubmit,
@@ -27,9 +27,9 @@ const CreateGuest = () => {
     if (error) {
       setError("cpf", {type: "string", message: error})
     } else {
-      const fetchedData = await fetchFirestoreData();
-      if (!fetchedData) return;
-      setFetchedGuests(fetchedData.guests);
+      const data = await fetchFirestoreData();
+      if (!data) return;
+      setFetchedData(data);
 
       setIsRegisterModalOpen(false);
       setGuestCardInfoModalId(data.cpf);

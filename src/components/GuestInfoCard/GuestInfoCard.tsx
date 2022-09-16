@@ -19,7 +19,7 @@ const GuestInfoCard = ({
   numero,
   complemento,
 }: GuestCardProps) => {
-  const { setGuestCardInfoModalId, setIsImageModalOpen, isImageModalOpen, fetchedGuests, setFetchedGuests } = useContext(DataContext);
+  const { setGuestCardInfoModalId, setIsImageModalOpen, isImageModalOpen, fetchedData, setFetchedData } = useContext(DataContext);
   const [imageSrc, setImageSrc] = useState<string>("");
 
   const handleModalClose = (e: MouseEvent) => {
@@ -35,12 +35,14 @@ const GuestInfoCard = ({
   }
 
   const handleGuestRemove = async () => {
-    const guestToRemove = fetchedGuests.filter(guest => guest.cpf === cpf)[0];
+    const guestToRemove = fetchedData["guests"].filter(guest => guest.cpf === cpf)[0];
     
     removeGuest(guestToRemove);
     const data = await fetchFirestoreData();
     setGuestCardInfoModalId(null);
-    setFetchedGuests(data?.guests);
+
+    if(!data) return;
+    setFetchedData(data);
   }
 
   return (
