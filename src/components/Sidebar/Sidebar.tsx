@@ -17,8 +17,7 @@ const Sidebar = () => {
     
     optionsArray.map(option => option.classList.remove("sidebar__selected"));
     const buttonToAddClassName = optionsArray.find(option => option === e.target);
-    buttonToAddClassName?.classList.add("sidebar__selected");
-    
+    buttonToAddClassName?.classList.add("sidebar__selected");    
   }
 
   return (
