@@ -19,6 +19,7 @@ import {
   arrayRemove
 } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { v4 } from "uuid";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAdOdJBtVMM0VHzpIyDuYIuV_9h6GgJDe0",
@@ -134,6 +135,28 @@ export const registerVisit = async (visitorToRegister: VisitorCardProps) => {
   } catch (error) {
     console.log(error);
   }
+}
+
+export const finishVisit = async (visitor: VisitorCardProps) => {
+  const currentUser = auth.currentUser;
+  if (!currentUser) return;
+
+  const userDocRef = doc(db, "users", currentUser.uid);
+
+  const historyVisitor = {...visitor, saida: new Date(), id: v4()};
+
+  try {
+    await updateDoc(userDocRef, {
+      visiting: arrayRemove(visitor)
+    })
+
+    await updateDoc(userDocRef, {
+      history: arrayUnion(historyVisitor)
+    })
+  } catch (error) {
+    console.log(error);    
+  }
+
 }
 
 export const updateGuestPicture = async (guestToUpdate: GuestCardProps) => {
