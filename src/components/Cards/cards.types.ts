@@ -17,5 +17,5 @@ export interface VisitorCardProps extends GuestCardProps {
 
 export interface HistoryCardProps extends GuestCardProps {
   entrada: Timestamp;
-  saida: Timestamp;  
+  saida: Timestamp;
 }
