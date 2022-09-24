@@ -5,6 +5,8 @@ import DataContext from "../../contexts/data.context";
 import { VisitorCardProps } from "../Cards/cards.types";
 import profilePicturePlaceholder from "../../assets/profile-placeholder.webp";
 import { formatCPF } from "../../utils/formatCPF";
+import { formatDate } from "../../utils/formatDate";
+import { fetchFirestoreData, finishVisit } from "../../utils/firebase";
 
 const VisitorInfoCard = ({
   guestPicture,
@@ -17,7 +19,22 @@ const VisitorInfoCard = ({
   complemento,
   entrada,
 }: VisitorCardProps) => {
-  const { setVisitorCardInfoModalId } = useContext(DataContext);
+  const { setVisitorCardInfoModalId, fetchedData, setFetchedData } = useContext(DataContext);
+
+  const handleVisitFinish = async () => {
+    const userToFinishVisit = fetchedData.visiting.filter(visitor => visitor.cpf === cpf)[0];
+
+    try {
+      await finishVisit(userToFinishVisit);
+      setVisitorCardInfoModalId(null);
+
+      const updatedData = await fetchFirestoreData();
+      setFetchedData(updatedData);
+    } catch (error) {
+      console.log(error);      
+    }
+    
+  }
 
 
   const handleModalClose = (e: MouseEvent) => {
@@ -60,36 +77,16 @@ const VisitorInfoCard = ({
           <p className="guestinfo__description">{formatCPF(cpf)}</p>
         </div>
 
-        <span className="create-guest__section-title">Endereço</span>
+        <span className="create-guest__section-title">Visita</span>
 
         <div className="guestinfo__info">
-          <h2 className="guestinfo__title">Cidade</h2>
-          <p className="guestinfo__description">{cidade || "Não informado"}</p>
-        </div>
-        <div className="guestinfo__info">
-          <h2 className="guestinfo__title">Bairro</h2>
-          <p className="guestinfo__description">{bairro || "Não informado"}</p>
-        </div>
-        <div className="guestinfo__flex">
-          <div className="guestinfo__info">
-            <h2 className="guestinfo__title">Rua</h2>
-            <p className="guestinfo__description">{rua || "Não informado"}</p>
-          </div>
-          <div className="guestinfo__info">
-            <h2 className="guestinfo__title">Número</h2>
-            <p className="guestinfo__description">
-              {numero || "Não informado"}
-            </p>
-          </div>
-        </div>
-        <div className="guestinfo__info">
-          <h2 className="guestinfo__title">Complemento</h2>
+          <h2 className="guestinfo__title">Entrou</h2>
           <p className="guestinfo__description">
-            {complemento || "Não informado"}
+            { formatDate(entrada)}
           </p>
         </div>
         <div className="guestinfo__buttons">
-          <button type="button" className="guestinfo__button">
+          <button type="button" className="guestinfo__button" onClick={handleVisitFinish}>
             Encerrar visita
           </button>
         </div>
