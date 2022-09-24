@@ -22,7 +22,7 @@ const VisitorCard = ({
       <img
         className="card__image"
         src={guestPicture || ProfilePlaceholder}
-        alt="imagem aleatória"
+        alt=""
       />
       <div className="card__section">
         <span className="card__label">nome</span>
