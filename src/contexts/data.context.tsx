@@ -13,8 +13,10 @@ interface ContextType {
   setSelectedSidebarTab: (buttonClicked: selectionOptions) => void;
   isRegisterModalOpen: boolean;
   setIsRegisterModalOpen: (isOpen: boolean) => void;
-  GuestCardInfoModalId: number | null;
+  guestCardInfoModalId: number | null;
   setGuestCardInfoModalId: (isOpen: number | null) => void;
+  visitorCardInfoModalId: number | null;
+  setVisitorCardInfoModalId: (isOpen: number | null) => void;
   search: string;
   setSearch: (searchTerm: string) => void;
   isImageModalOpen: boolean;
@@ -37,7 +39,8 @@ export type selectionOptions = "guests" | "visiting" | "history";
 export const DataProvider = ({ children }: DataProvider) => {
   const [selectedSidebarTab, setSelectedSidebarTab] = useState<selectionOptions>("guests");
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
-  const [GuestCardInfoModalId, setGuestCardInfoModalId] = useState<number | null>(null);
+  const [guestCardInfoModalId, setGuestCardInfoModalId] = useState<number | null>(null);
+  const [visitorCardInfoModalId, setVisitorCardInfoModalId] = useState<number | null>(null);
   const [search, setSearch] = useState("");
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const [user, setUser] = useState<FirebaseUser | null>(null);
@@ -52,8 +55,10 @@ export const DataProvider = ({ children }: DataProvider) => {
       setIsRegisterModalOpen,
       search,
       setSearch,
-      GuestCardInfoModalId,
+      guestCardInfoModalId,
       setGuestCardInfoModalId,
+      visitorCardInfoModalId,
+      setVisitorCardInfoModalId,
       isImageModalOpen,
       setIsImageModalOpen,
       user,
