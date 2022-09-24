@@ -2,18 +2,19 @@ import { User } from "firebase/auth";
 import { useContext, useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
-import { Header, Sidebar, Main, GuestInfoCard } from "./components";
-import { GuestCardProps } from "./components/Cards/cards.types";
+import { Header, Sidebar, Main, GuestInfoCard, VisitorInfoCard } from "./components";
+import { GuestCardProps, VisitorCardProps } from "./components/Cards/cards.types";
 import DataContext from "./contexts/data.context";
 import { fetchFirestoreData, onAuthStateChangedListener } from "./utils/firebase";
 
 function App() {
   const { setUser } = useContext(DataContext);
   const [guest, setGuest] = useState({} as GuestCardProps);
+  const [visitor, setVisitor] = useState({} as VisitorCardProps);
   const [ cookies ] = useCookies();
   const navigate = useNavigate();
 
-  const { GuestCardInfoModalId, fetchedData, setFetchedData, selectedSidebarTab } = useContext(DataContext);
+  const { guestCardInfoModalId, visitorCardInfoModalId, fetchedData, setFetchedData } = useContext(DataContext);
   
   useEffect(() => {
     
@@ -25,8 +26,8 @@ function App() {
   }, []);
   
   useEffect(() => {
-    const setSelectedGuest = async () => {
-      const selectedGuest = fetchedData["guests"].find((guest: GuestCardProps) => guest.cpf === GuestCardInfoModalId);
+    const setSelectedGuest = () => {
+      const selectedGuest = fetchedData["guests"].find((guest: GuestCardProps) => guest.cpf === guestCardInfoModalId);
       
       if (!selectedGuest) return;
 
@@ -34,7 +35,19 @@ function App() {
     }
 
     setSelectedGuest();
-  }, [GuestCardInfoModalId]);
+  }, [guestCardInfoModalId]);
+
+  useEffect(() => {
+    const setSelectedVisitor = () => {
+      const selectedVisitor = fetchedData["visiting"].find((visitor: VisitorCardProps) => visitor.cpf === visitorCardInfoModalId);
+
+      if (!selectedVisitor) return;
+
+      setVisitor(selectedVisitor);
+    }
+
+    setSelectedVisitor();
+  }, [visitorCardInfoModalId]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -63,7 +76,7 @@ function App() {
       <div className="main-wrapper">
         <Sidebar />
         <Main />
-        {GuestCardInfoModalId && guest &&
+        {guestCardInfoModalId && guest &&
          <GuestInfoCard
           nome={guest.nome}
           cpf={guest.cpf}
@@ -74,6 +87,19 @@ function App() {
           complemento={guest.complemento}
           guestPicture={guest.guestPicture}
         />
+        }
+        {visitorCardInfoModalId && visitor &&
+          <VisitorInfoCard
+            guestPicture={visitor.guestPicture}
+            nome={visitor.nome}
+            cpf={visitor.cpf}
+            cidade={visitor.cidade}
+            bairro={visitor.bairro}
+            rua={visitor.rua}
+            numero={visitor.numero}
+            complemento={visitor.complemento}
+            entrada={visitor.entrada}
+          />
         }
       </div>
     </div>
