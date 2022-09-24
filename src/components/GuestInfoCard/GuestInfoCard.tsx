@@ -4,10 +4,11 @@ import { X } from "phosphor-react";
 import { GuestCardProps } from "../Cards/cards.types";
 import { formatCPF } from "../../utils/formatCPF";
 import profilePicturePlaceholder from "../../assets/profile-placeholder.webp";
+import { Timestamp } from "firebase/firestore";
 
 import "./guestinfo.scss";
 import ImageShooterModal from "../ImageShooterModal/ImageShooterModal";
-import { fetchFirestoreData, removeGuest } from "../../utils/firebase";
+import { fetchFirestoreData, registerVisit, removeGuest } from "../../utils/firebase";
 
 const GuestInfoCard = ({
   guestPicture,
@@ -21,6 +22,30 @@ const GuestInfoCard = ({
 }: GuestCardProps) => {
   const { setGuestCardInfoModalId, setIsImageModalOpen, isImageModalOpen, fetchedData, setFetchedData } = useContext(DataContext);
   const [imageSrc, setImageSrc] = useState<string>("");
+  const handleVisitRegister = async () => {
+    const visitorToRegister = {
+      guestPicture,
+      nome,
+      cpf,
+      cidade,
+      bairro,
+      rua,
+      numero,
+      complemento,
+      entrada: Timestamp.fromDate(new Date())
+    };
+
+    try {
+      await registerVisit(visitorToRegister);
+      const updatedData = await fetchFirestoreData();
+      setFetchedData(updatedData);
+      
+      setGuestCardInfoModalId(null);
+    } catch (error) {
+      console.log(error);      
+    }
+
+  }
 
   const handleModalClose = (e: MouseEvent) => {
     const target = e.target as HTMLElement;
@@ -102,7 +127,7 @@ const GuestInfoCard = ({
             <button type="button" className="guestinfo__button delete" onClick={handleGuestRemove}>
               Deletar
             </button>
-            <button type="button" className="guestinfo__button">
+            <button type="button" className="guestinfo__button" onClick={handleVisitRegister}>
               Registrar visita
             </button>
           </div>
