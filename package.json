@@ -10,6 +10,7 @@
     "watch": "npx json-server --watch data.json"
   },
   "dependencies": {
+    "date-fns": "^2.29.3",
     "firebase": "^9.9.3",
     "phosphor-react": "^1.4.1",
     "react": "^18.2.0",
