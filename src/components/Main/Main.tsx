@@ -48,7 +48,7 @@ const Main = () => {
           } else if (selectedSidebarTab === "history") {
             return (
               <HistoryCard
-              key={guest.cpf}
+              key={guest.id}
               guestPicture={guest.guestPicture}
               nome={guest.nome}
               cpf={guest.cpf}
