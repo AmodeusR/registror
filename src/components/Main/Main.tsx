@@ -9,59 +9,63 @@ import "./main.scss";
 
 const Main = () => {
   const { search, fetchedData, selectedSidebarTab } = useContext(DataContext);
+
+  const dataToShow = fetchedData[selectedSidebarTab];
+  
   
   return (
     <main className="main-section">
-      {Object.keys(fetchedData).length !== 0 && fetchedData[selectedSidebarTab].length ?
-        fetchedData[selectedSidebarTab].filter(({ nome, cpf }) =>
-          nome.toLowerCase().includes(search.toLowerCase()) ||
-          String(cpf).includes(search)
-        )
-        .map((guest) => {
+      {dataToShow.filter(({ nome, cpf }) => 
+          nome.toLowerCase().includes(search.toLowerCase()) || String(cpf).includes(search)
+        ).map(user => {
           if (selectedSidebarTab === "guests") {
             return (
               <GuestCard
-                key={guest.cpf}
-                guestPicture={guest.guestPicture}
-                nome={guest.nome}
-                cpf={guest.cpf}
-                cidade={guest.cidade}
-                bairro={guest.bairro}
-                rua={guest.rua}
-                numero={guest.numero}
+              key={user.cpf}
+              guestPicture={user.guestPicture}
+              nome={user.nome}
+              cpf={user.cpf}
+              cidade={user.cidade}
+              bairro={user.bairro}
+              rua={user.rua}
+              numero={user.numero}
               />
             );
           } else if (selectedSidebarTab === "visiting") {
             return (
               <VisitorCard
-              key={guest.cpf}
-              guestPicture={guest.guestPicture}
-              nome={guest.nome}
-              cpf={guest.cpf}
-              cidade={guest.cidade}
-              bairro={guest.bairro}
-              rua={guest.rua}
-              numero={guest.numero}
-              entrada={guest.entrada}
+              key={user.cpf}
+              guestPicture={user.guestPicture}
+              nome={user.nome}
+              cpf={user.cpf}
+              cidade={user.cidade}
+              bairro={user.bairro}
+              rua={user.rua}
+              numero={user.numero}
+              //@ts-ignore
+              entrada={user.entrada}
               />
-            );
-          } else if (selectedSidebarTab === "history") {
+              );
+            } else if (selectedSidebarTab === "history") {
             return (
               <HistoryCard
-              key={guest.id}
-              guestPicture={guest.guestPicture}
-              nome={guest.nome}
-              cpf={guest.cpf}
-              cidade={guest.cidade}
-              bairro={guest.bairro}
-              rua={guest.rua}
-              numero={guest.numero}
-              entrada={guest.entrada}
-              saida={guest.saida}
+              //@ts-ignore
+                key={user.id}
+                guestPicture={user.guestPicture}
+                nome={user.nome}
+                cpf={user.cpf}
+                cidade={user.cidade}
+                bairro={user.bairro}
+                rua={user.rua}
+                numero={user.numero}
+                //@ts-ignore
+                entrada={user.entrada}
+                //@ts-ignore
+                saida={user.saida}
               />
             );
-          }
-        }) :
+          }            
+        }).reverse() || 
         <p className="main-section__error-message">Banco de dados inacessível.</p>
       }
     </main>
