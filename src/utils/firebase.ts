@@ -1,4 +1,4 @@
-import { GuestCardProps } from "./../components/Cards/cards.types";
+import { GuestCardProps, VisitorCardProps } from "./../components/Cards/cards.types";
 import { initializeApp } from "firebase/app";
 import {
   getAuth,
@@ -16,8 +16,7 @@ import {
   setDoc,
   updateDoc,
   arrayUnion,
-  arrayRemove,
-  FieldValue
+  arrayRemove
 } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
@@ -105,7 +104,7 @@ export const createNewGuest = async (newGuest: GuestCardProps) => {
   }
   try {
     await updateDoc(userDocRef, {
-      guests: arrayUnion(newGuest),
+      guests: arrayUnion(newGuest)
     });
   } catch (error) {
     console.log(error);
@@ -113,6 +112,29 @@ export const createNewGuest = async (newGuest: GuestCardProps) => {
 
   return null;
 };
+
+export const registerVisit = async (visitorToRegister: VisitorCardProps) => {
+  const currentUser = auth.currentUser;
+  if (!currentUser) return;
+
+  const userDocRef = doc(db, "users", currentUser.uid);
+  const dataSnapshot = await getDoc(userDocRef);
+  const visiting = dataSnapshot.data()?.visiting;
+  const isVisitorAlreadyVisiting = visiting.some((visitor: VisitorCardProps) => visitor.cpf === visitorToRegister.cpf);  
+  
+  if (isVisitorAlreadyVisiting) {
+    alert("Esta pessoa já tem sua visita sendo registrada no momento!");
+    throw new Error("Visita já registrada");
+  }
+
+  try {
+    await updateDoc(userDocRef, {
+      visiting: arrayUnion(visitorToRegister)
+    });
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 export const updateGuestPicture = async (guestToUpdate: GuestCardProps) => {
   const currentUser = auth.currentUser;
