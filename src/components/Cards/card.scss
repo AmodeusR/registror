@@ -43,4 +43,12 @@
     border-left: 2px solid var(--neutral-white-light);
     align-self: flex-end;
   }
+
+  &__date {
+    text-transform: lowercase !important;
+
+    &:first-letter {
+      text-transform: uppercase;
+    }
+  }
 }
