@@ -3,9 +3,9 @@
   flex: 1;
   max-height: calc(100vh - 100px);
 
-  &__error-message {
+  &__empty-message {
     text-align: center;
-    color: crimson;
+    color: var(--neutral-white-fade);
     margin-top: 2rem;
     font-size: 1.2rem;
   }
