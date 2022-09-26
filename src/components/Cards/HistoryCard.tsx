@@ -4,8 +4,11 @@ import ProfilePlaceholder from "../../assets/profile-placeholder.webp";
 import { formatCPF } from "../../utils/formatCPF";
 import { formatAddress } from "../../utils/formatAddress";
 import { formatDateRelative } from "../../utils/formatDate";
+import DataContext from "../../contexts/data.context";
+import { useContext } from "react";
 
-const VisitorCard = ({
+const HistoryCard = ({
+  id,
   guestPicture,
   nome,
   cpf,
@@ -17,8 +20,15 @@ const VisitorCard = ({
   entrada,
   saida
 }: HistoryCardProps) => {
+  const { setHistoryCardInfoModalId } = useContext(DataContext);
+
+  const handleClick = () => {
+    if (!id) return;
+    
+    setHistoryCardInfoModalId(id);
+  }
   return (
-    <button className="card">
+    <button className="card" onClick={handleClick}>
       <img
         className="card__image"
         src={guestPicture || ProfilePlaceholder}
@@ -60,4 +70,4 @@ const VisitorCard = ({
   );
 };
 
-export default VisitorCard;
+export default HistoryCard;
