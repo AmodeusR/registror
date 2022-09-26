@@ -23,8 +23,10 @@ const GuestInfoCard = ({
   const { setGuestCardInfoModalId, setIsImageModalOpen, isImageModalOpen, fetchedData, setFetchedData } = useContext(DataContext);
   const [imageSrc, setImageSrc] = useState<string>("");
   const handleVisitRegister = async () => {
+    const visitorPicture = imageSrc || guestPicture;
+    
     const visitorToRegister = {
-      guestPicture,
+      guestPicture: visitorPicture,
       nome,
       cpf,
       cidade,
