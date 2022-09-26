@@ -196,7 +196,10 @@ export const removeGuest = async (guestToRemove: GuestCardProps) => {
 // Storage Functions
 
   export const uploadUserPicture = ({img, userID}: UploadDataProps) => {
-    const userPictureRef = ref(storage, `userPictures/${userID}`);
+    const currentUser = auth.currentUser;
+    if (!currentUser) return;
+
+    const userPictureRef = ref(storage, `userPictures/${currentUser.uid}/${userID}`);
 
     try {
       const imgLink = uploadBytes(userPictureRef, img)
