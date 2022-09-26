@@ -81,8 +81,8 @@ const VisitorInfoCard = ({
 
         <div className="guestinfo__info">
           <h2 className="guestinfo__title">Entrou</h2>
-          <p className="guestinfo__description">
-            { formatDate(entrada)}
+          <p className="guestinfo__description card__date">
+            { formatDate(entrada) }
           </p>
         </div>
         <div className="guestinfo__buttons">
