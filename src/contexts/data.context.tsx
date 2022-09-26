@@ -17,6 +17,8 @@ interface ContextType {
   setGuestCardInfoModalId: (isOpen: number | null) => void;
   visitorCardInfoModalId: number | null;
   setVisitorCardInfoModalId: (isOpen: number | null) => void;
+  historyCardInfoModalId: string | null;
+  setHistoryCardInfoModalId: (isOpen: string | null) => void;
   search: string;
   setSearch: (searchTerm: string) => void;
   isImageModalOpen: boolean;
@@ -41,6 +43,7 @@ export const DataProvider = ({ children }: DataProvider) => {
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
   const [guestCardInfoModalId, setGuestCardInfoModalId] = useState<number | null>(null);
   const [visitorCardInfoModalId, setVisitorCardInfoModalId] = useState<number | null>(null);
+  const [historyCardInfoModalId, setHistoryCardInfoModalId] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const [user, setUser] = useState<FirebaseUser | null>(null);
@@ -59,6 +62,8 @@ export const DataProvider = ({ children }: DataProvider) => {
       setGuestCardInfoModalId,
       visitorCardInfoModalId,
       setVisitorCardInfoModalId,
+      historyCardInfoModalId,
+      setHistoryCardInfoModalId,
       isImageModalOpen,
       setIsImageModalOpen,
       user,
