@@ -2,8 +2,8 @@ import { User } from "firebase/auth";
 import { useContext, useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
-import { Header, Sidebar, Main, GuestInfoCard, VisitorInfoCard } from "./components";
-import { GuestCardProps, VisitorCardProps } from "./components/Cards/cards.types";
+import { Header, Sidebar, Main, GuestInfoCard, VisitorInfoCard, HistoryInfoCard } from "./components";
+import { GuestCardProps, HistoryCardProps, VisitorCardProps } from "./components/Cards/cards.types";
 import DataContext from "./contexts/data.context";
 import { fetchFirestoreData, onAuthStateChangedListener } from "./utils/firebase";
 
@@ -11,10 +11,11 @@ function App() {
   const { setUser } = useContext(DataContext);
   const [guest, setGuest] = useState({} as GuestCardProps);
   const [visitor, setVisitor] = useState({} as VisitorCardProps);
+  const [historyGuest, setHistoryGuest] = useState({} as HistoryCardProps);
   const [ cookies ] = useCookies();
   const navigate = useNavigate();
 
-  const { guestCardInfoModalId, visitorCardInfoModalId, fetchedData, setFetchedData } = useContext(DataContext);
+  const { guestCardInfoModalId, visitorCardInfoModalId, historyCardInfoModalId, fetchedData, setFetchedData } = useContext(DataContext);
   
   useEffect(() => {
     
@@ -48,6 +49,18 @@ function App() {
 
     setSelectedVisitor();
   }, [visitorCardInfoModalId]);
+
+  useEffect(() => {
+    const setSelectedHistoryGuest = () => {
+      const selectedHistory = fetchedData["history"].find((historyGuest: HistoryCardProps) => historyGuest.id === historyCardInfoModalId);
+      
+      if (!selectedHistory) return;
+
+      setHistoryGuest(selectedHistory);
+    }
+
+    setSelectedHistoryGuest();
+  }, [historyCardInfoModalId]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -99,6 +112,15 @@ function App() {
             numero={visitor.numero}
             complemento={visitor.complemento}
             entrada={visitor.entrada}
+          />
+        }
+        {historyCardInfoModalId && historyGuest &&
+          <HistoryInfoCard
+            guestPicture={historyGuest.guestPicture}
+            nome={historyGuest.nome}
+            cpf={historyGuest.cpf}
+            entrada={historyGuest.entrada}
+            saida={historyGuest.saida}
           />
         }
       </div>
