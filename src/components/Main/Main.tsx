@@ -5,17 +5,17 @@ import GuestCard from "../Cards/GuestCard";
 import VisitorCard from "../Cards/VisitorCard";
 import HistoryCard from "../Cards/HistoryCard";
 
-import "./main.scss";
+import "./main-section.scss";
 
 const Main = () => {
   const { search, fetchedData, selectedSidebarTab } = useContext(DataContext);
 
-  const dataToShow = fetchedData[selectedSidebarTab];
+  const dataToShow = fetchedData[selectedSidebarTab] || [];
   
   
   return (
     <main className="main-section">
-      {dataToShow.filter(({ nome, cpf }) => 
+      {dataToShow && dataToShow.filter(({ nome, cpf }) => 
           nome.toLowerCase().includes(search.toLowerCase()) || String(cpf).includes(search)
         ).map(user => {
           if (selectedSidebarTab === "guests") {
@@ -49,8 +49,10 @@ const Main = () => {
             } else if (selectedSidebarTab === "history") {
             return (
               <HistoryCard
-              //@ts-ignore
+                //@ts-ignore
                 key={user.id}
+                //@ts-ignore
+                id={user.id}
                 guestPicture={user.guestPicture}
                 nome={user.nome}
                 cpf={user.cpf}
@@ -65,8 +67,12 @@ const Main = () => {
               />
             );
           }            
-        }).reverse() || 
-        <p className="main-section__error-message">Banco de dados inacessível.</p>
+        }).reverse()
+      }
+      {dataToShow.length === 0 &&
+      <div>
+        <p className="main-section__empty-message">Parece que não há nada aqui</p>
+      </div>
       }
     </main>
   );
