@@ -16,6 +16,7 @@ export interface VisitorCardProps extends GuestCardProps {
 }
 
 export interface HistoryCardProps extends GuestCardProps {
+  id?: string;
   entrada: Timestamp;
   saida: Timestamp;
 }
