@@ -103,6 +103,7 @@ export const createNewGuest = async (newGuest: GuestCardProps) => {
   if (isCPFRegistered) {
     return "Este CPF já está registrado";
   }
+  
   try {
     await updateDoc(userDocRef, {
       guests: arrayUnion(newGuest)
