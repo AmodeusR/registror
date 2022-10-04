@@ -15,24 +15,57 @@ interface VisitorIsOption {
   readonly value: string;
 }
 
-const apartments: ApartmentOption[] = [
+const placeholderApartments: ApartmentOption[] = [
   {
-    label: 1301,
-    value: 1301
+    label: 101,
+    value: 101
   },
   {
-    label: 1304,
-    value: 1304
+    label: 102,
+    value: 102
   },
   {
-    label: 1501,
-    value: 1501
+    label: 201,
+    value: 201
   },
   {
-    label: 1602,
-    value: 1602
+    label: 202,
+    value: 202
+  },
+  {
+    label: 301,
+    value: 301
+  },
+  {
+    label: 302,
+    value: 302
+  },
+  {
+    label: 401,
+    value: 401
+  },
+  {
+    label: 402,
+    value: 402
+  },
+  {
+    label: 501,
+    value: 501
+  },
+  {
+    label: 502,
+    value: 502
+  },
+  {
+    label: 601,
+    value: 601
+  },
+  {
+    label: 602,
+    value: 602
   }
-];
+]
+
 
 const visitorIsOptions: VisitorIsOption[] = [
   {
@@ -58,7 +91,7 @@ interface VisitorConfirmationModalProps {
 }
 
 const VisitConfirmationModal = ({ visitorData }: VisitorConfirmationModalProps) => {
-  const { setFetchedData, setGuestCardInfoModalId } = useContext(DataContext);
+  const { setFetchedData, setGuestCardInfoModalId, fetchedApartments } = useContext(DataContext);
   const [visiting, setVisiting] = useState<ApartmentOption | null>(null);
   const [visitedName, setVisitedName] = useState("");
   const [visitorIs, setVisitorIs] = useState<VisitorIsOption | null>(null);
@@ -107,7 +140,7 @@ const VisitConfirmationModal = ({ visitorData }: VisitorConfirmationModalProps) 
           <Select
             className="confirm-modal__input"
             onChange={setVisiting}
-            options={apartments}
+            options={fetchedApartments || placeholderApartments}
             placeholder="Selecione..."
           />
         </div>
