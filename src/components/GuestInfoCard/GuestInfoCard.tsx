@@ -29,32 +29,16 @@ const GuestInfoCard = ({
     setIsConfirmVisitModalOpen(!isConfirmVisitModalOpen);
   }
 
-  const handleVisitRegister = async () => {
-    const visitorPicture = imageSrc || guestPicture;
-    
-    const visitorToRegister = {
-      guestPicture: visitorPicture,
+  const visitorData = {
+      guestPicture: imageSrc || guestPicture,
       nome,
       cpf,
       cidade,
       bairro,
       rua,
       numero,
-      complemento,
-      entrada: Timestamp.fromDate(new Date())
+      complemento
     };
-
-    try {
-      await registerVisit(visitorToRegister);
-      const updatedData = await fetchFirestoreData();
-      setFetchedData(updatedData);
-      
-      setGuestCardInfoModalId(null);
-    } catch (error) {
-      console.log(error);      
-    }
-
-  }
 
   const handleModalClose = (e: MouseEvent) => {
     const target = e.target as HTMLElement;
@@ -141,7 +125,7 @@ const GuestInfoCard = ({
             </button>
           </div>
           {isConfirmVisitModalOpen &&
-            <VisitConfirmationModal />
+            <VisitConfirmationModal visitorData={visitorData} />
           }
         </div>
     </div>
