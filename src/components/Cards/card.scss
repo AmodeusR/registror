@@ -30,6 +30,10 @@
 
   &__info {
     margin: 0;
+
+    &.capitalize {
+      text-transform: capitalize;
+    }
   }
 
   &__image {
