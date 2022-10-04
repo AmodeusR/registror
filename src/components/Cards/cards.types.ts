@@ -12,11 +12,13 @@ export interface GuestCardProps {
 }
 
 export interface VisitorCardProps extends GuestCardProps {
-  entrada: Timestamp
+  entrada: Timestamp;
+  visitando: number;
+  visitado: string;
+  tipoDaVisita: string;
 }
 
-export interface HistoryCardProps extends GuestCardProps {
+export interface HistoryCardProps extends VisitorCardProps {
   id?: string;
-  entrada: Timestamp;
   saida: Timestamp;
 }
