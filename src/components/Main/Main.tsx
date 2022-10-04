@@ -21,29 +21,35 @@ const Main = () => {
           if (selectedSidebarTab === "guests") {
             return (
               <GuestCard
-              key={user.cpf}
-              guestPicture={user.guestPicture}
-              nome={user.nome}
-              cpf={user.cpf}
-              cidade={user.cidade}
-              bairro={user.bairro}
-              rua={user.rua}
-              numero={user.numero}
+                key={user.cpf}
+                guestPicture={user.guestPicture}
+                nome={user.nome}
+                cpf={user.cpf}
+                cidade={user.cidade}
+                bairro={user.bairro}
+                rua={user.rua}
+                numero={user.numero}
               />
             );
           } else if (selectedSidebarTab === "visiting") {
             return (
               <VisitorCard
-              key={user.cpf}
-              guestPicture={user.guestPicture}
-              nome={user.nome}
-              cpf={user.cpf}
-              cidade={user.cidade}
-              bairro={user.bairro}
-              rua={user.rua}
-              numero={user.numero}
-              //@ts-ignore
-              entrada={user.entrada}
+                key={user.cpf}
+                guestPicture={user.guestPicture}
+                nome={user.nome}
+                cpf={user.cpf}
+                cidade={user.cidade}
+                bairro={user.bairro}
+                rua={user.rua}
+                numero={user.numero}
+                // @ts-ignore
+                entrada={user.entrada}
+                // @ts-ignore
+                visitando={user.visitando}
+                // @ts-ignore
+                visitado={user.visitado}
+                // @ts-ignore
+                tipoDaVisita={user.tipoDaVisita}
               />
               );
             } else if (selectedSidebarTab === "history") {
@@ -64,6 +70,12 @@ const Main = () => {
                 entrada={user.entrada}
                 //@ts-ignore
                 saida={user.saida}
+                //@ts-ignore
+                visitando={user.visitando}
+                //@ts-ignore
+                visitado={user.visitado}
+                //@ts-ignore
+                tipoDaVisita={user.tipoDaVisita}
               />
             );
           }            
