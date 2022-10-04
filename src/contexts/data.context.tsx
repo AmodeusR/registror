@@ -8,6 +8,7 @@ interface FirestoreData {
   visiting: VisitorCardProps[];
   history: HistoryCardProps[];
 }
+
 interface ContextType {
   selectedSidebarTab: "guests" | "visiting" | "history";
   setSelectedSidebarTab: (buttonClicked: selectionOptions) => void;
@@ -27,10 +28,16 @@ interface ContextType {
   setUser: (user: FirebaseUser | null) => void;
   fetchedData: FirestoreData;
   setFetchedData: (fetchedData: FirestoreData) => void;
+  fetchedApartments: ApartmentOption[];
+  setFetchedApartments: (apartments: ApartmentOption[]) => void;
 }
 
 const DataContext = createContext({} as ContextType);
 
+interface ApartmentOption {
+  readonly label: number;
+  readonly value: number;
+}
 
 interface DataProvider {
   children: ReactNode;
@@ -48,6 +55,7 @@ export const DataProvider = ({ children }: DataProvider) => {
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const [user, setUser] = useState<FirebaseUser | null>(null);
   const [fetchedData, setFetchedData] = useState<FirestoreData>({guests: [], visiting: [], history: []} as FirestoreData);
+  const [fetchedApartments, setFetchedApartments] = useState<ApartmentOption[]>([]);
 
 
   return (
@@ -69,7 +77,9 @@ export const DataProvider = ({ children }: DataProvider) => {
       user,
       setUser,
       fetchedData,
-      setFetchedData
+      setFetchedData,
+      fetchedApartments,
+      setFetchedApartments
     }}>
       { children }
     </DataContext.Provider>
