@@ -1,83 +1,106 @@
-import { User } from "firebase/auth";
 import { useContext, useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
-import { Header, Sidebar, Main, GuestInfoCard, VisitorInfoCard, HistoryInfoCard } from "./components";
-import { GuestCardProps, HistoryCardProps, VisitorCardProps } from "./components/Cards/cards.types";
+import {
+  Header,
+  Sidebar,
+  Main,
+  GuestInfoCard,
+  VisitorInfoCard,
+  HistoryInfoCard,
+} from "./components";
+import {
+  GuestCardProps,
+  HistoryCardProps,
+  VisitorCardProps,
+} from "./components/Cards/cards.types";
 import DataContext from "./contexts/data.context";
-import { fetchFirestoreData, onAuthStateChangedListener } from "./utils/firebase";
+import {
+  fetchFirestoreApartments,
+  fetchFirestoreData,
+  onAuthStateChangedListener,
+  uploadContent,
+} from "./utils/firebase";
 
 function App() {
   const { setUser } = useContext(DataContext);
   const [guest, setGuest] = useState({} as GuestCardProps);
   const [visitor, setVisitor] = useState({} as VisitorCardProps);
   const [historyGuest, setHistoryGuest] = useState({} as HistoryCardProps);
-  const [ cookies ] = useCookies();
+  const [cookies] = useCookies();
   const navigate = useNavigate();
 
-  const { guestCardInfoModalId, visitorCardInfoModalId, historyCardInfoModalId, fetchedData, setFetchedData } = useContext(DataContext);
-  
+  const {
+    guestCardInfoModalId,
+    visitorCardInfoModalId,
+    historyCardInfoModalId,
+    fetchedData,
+    setFetchedData,
+    setFetchedApartments,
+  } = useContext(DataContext);
+
   useEffect(() => {
-    
     if (!cookies.user) {
       navigate("/");
     } else {
       setUser(cookies.user);
-    }    
+    }
   }, []);
-  
+
   useEffect(() => {
     const setSelectedGuest = () => {
-      const selectedGuest = fetchedData["guests"].find((guest: GuestCardProps) => guest.cpf === guestCardInfoModalId);
-      
+      const selectedGuest = fetchedData["guests"].find(
+        (guest: GuestCardProps) => guest.cpf === guestCardInfoModalId
+      );
+
       if (!selectedGuest) return;
 
       setGuest(selectedGuest);
-    }
+    };
 
     setSelectedGuest();
   }, [guestCardInfoModalId]);
 
   useEffect(() => {
     const setSelectedVisitor = () => {
-      const selectedVisitor = fetchedData["visiting"].find((visitor: VisitorCardProps) => visitor.cpf === visitorCardInfoModalId);
+      const selectedVisitor = fetchedData["visiting"].find(
+        (visitor: VisitorCardProps) => visitor.cpf === visitorCardInfoModalId
+      );
 
       if (!selectedVisitor) return;
 
       setVisitor(selectedVisitor);
-    }
+    };
 
     setSelectedVisitor();
   }, [visitorCardInfoModalId]);
 
   useEffect(() => {
     const setSelectedHistoryGuest = () => {
-      const selectedHistory = fetchedData["history"].find((historyGuest: HistoryCardProps) => historyGuest.id === historyCardInfoModalId);
-      
+      const selectedHistory = fetchedData["history"].find(
+        (historyGuest: HistoryCardProps) =>
+          historyGuest.id === historyCardInfoModalId
+      );
+
       if (!selectedHistory) return;
 
       setHistoryGuest(selectedHistory);
-    }
+    };
 
     setSelectedHistoryGuest();
   }, [historyCardInfoModalId]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const data = await fetchFirestoreData();
-
-      return data;
-    }
-
     const unsubscribe = onAuthStateChangedListener(async (user) => {
       setUser(user);
-      console.log(user);
-      
+
       if (user) {
-        const data = await fetchData();
-        
+        const data = await fetchFirestoreData();
+        const apartmentsData = await fetchFirestoreApartments();
+
         if (!data) return;
-        setFetchedData(data);        
+        setFetchedData(data);
+        setFetchedApartments(apartmentsData);
       }
     });
 
@@ -90,19 +113,19 @@ function App() {
       <div className="main-wrapper">
         <Sidebar />
         <Main />
-        {guestCardInfoModalId && guest &&
-         <GuestInfoCard
-          nome={guest.nome}
-          cpf={guest.cpf}
-          cidade={guest.cidade}
-          bairro={guest.bairro}
-          rua={guest.rua}
-          numero={guest.numero}
-          complemento={guest.complemento}
-          guestPicture={guest.guestPicture}
-        />
-        }
-        {visitorCardInfoModalId && visitor &&
+        {guestCardInfoModalId && guest && (
+          <GuestInfoCard
+            nome={guest.nome}
+            cpf={guest.cpf}
+            cidade={guest.cidade}
+            bairro={guest.bairro}
+            rua={guest.rua}
+            numero={guest.numero}
+            complemento={guest.complemento}
+            guestPicture={guest.guestPicture}
+          />
+        )}
+        {visitorCardInfoModalId && visitor && (
           <VisitorInfoCard
             guestPicture={visitor.guestPicture}
             nome={visitor.nome}
@@ -117,8 +140,8 @@ function App() {
             visitado={visitor.visitado}
             tipoDaVisita={visitor.tipoDaVisita}
           />
-        }
-        {historyCardInfoModalId && historyGuest &&
+        )}
+        {historyCardInfoModalId && historyGuest && (
           <HistoryInfoCard
             guestPicture={historyGuest.guestPicture}
             nome={historyGuest.nome}
@@ -129,7 +152,7 @@ function App() {
             visitado={historyGuest.visitado}
             tipoDaVisita={historyGuest.tipoDaVisita}
           />
-        }
+        )}
       </div>
     </div>
   );
