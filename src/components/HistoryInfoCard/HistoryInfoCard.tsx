@@ -73,7 +73,7 @@ const HistoryInfoCard = ({
           <div className="guestinfo__info">
             <h2 className="guestinfo__title">Visitou</h2>
             <p className="guestinfo__description card__date">
-              {visitado} – Apart. {visitando}
+              {visitado} – apart. {visitando}
             </p>
           </div>
 
@@ -92,7 +92,7 @@ const HistoryInfoCard = ({
         <div className="guestinfo__info">
           <h2 className="guestinfo__title">Saiu</h2>
           <p className="guestinfo__description card__date">
-            { formatDate(saida) }
+            {formatDate(saida)}
           </p>
         </div>
       </div>

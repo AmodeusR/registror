@@ -53,15 +53,15 @@ const HistoryCard = ({
       <div className="card__vertical-line" />
 
       <div className="card__section">
-        <span className="card__label">visitando</span>
-        <p className="card__info capitalize">{visitado} - Apart. {visitando}</p>
+        <span className="card__label">visitou</span>
+        <p className="card__info">{capitalize(visitado)} - apart. {visitando}</p>
       </div>
 
       <div className="card__vertical-line" />
 
       <div className="card__section">
         <span className="card__label">visitante é</span>
-        <p className="card__info capitalize">{tipoDaVisita && capitalize(tipoDaVisita)}</p>
+        <p className="card__info">{capitalize(tipoDaVisita)}</p>
       </div>
 
       <div className="card__vertical-line" />

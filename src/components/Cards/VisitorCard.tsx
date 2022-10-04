@@ -57,7 +57,7 @@ const VisitorCard = ({
 
       <div className="card__section">
         <span className="card__label">visitando</span>
-        <p className="card__info capitalize">{visitado} - Apart. {visitando}</p>
+        <p className="card__info">{capitalize(visitado)} - apart. {visitando}</p>
       </div>
 
       <div className="card__vertical-line" />
