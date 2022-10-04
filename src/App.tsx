@@ -71,7 +71,8 @@ function App() {
 
     const unsubscribe = onAuthStateChangedListener(async (user) => {
       setUser(user);
-
+      console.log(user);
+      
       if (user) {
         const data = await fetchData();
         
@@ -112,6 +113,9 @@ function App() {
             numero={visitor.numero}
             complemento={visitor.complemento}
             entrada={visitor.entrada}
+            visitando={visitor.visitando}
+            visitado={visitor.visitado}
+            tipoDaVisita={visitor.tipoDaVisita}
           />
         }
         {historyCardInfoModalId && historyGuest &&
@@ -121,6 +125,9 @@ function App() {
             cpf={historyGuest.cpf}
             entrada={historyGuest.entrada}
             saida={historyGuest.saida}
+            visitando={historyGuest.visitando}
+            visitado={historyGuest.visitado}
+            tipoDaVisita={historyGuest.tipoDaVisita}
           />
         }
       </div>
