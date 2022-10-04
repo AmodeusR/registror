@@ -16,7 +16,9 @@ import {
   setDoc,
   updateDoc,
   arrayUnion,
-  arrayRemove
+  arrayRemove,
+  writeBatch,
+  collection
 } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
@@ -29,6 +31,7 @@ const firebaseConfig = {
   messagingSenderId: "460062881217",
   appId: "1:460062881217:web:615c31b48aecbef232ab40",
 };
+
 
 // User Functions
 
@@ -58,6 +61,19 @@ export const onAuthStateChangedListener = (callback: NextOrObserver<User>) => {
 
 const db = getFirestore();
 
+export const uploadContent = async (collectionKey: string, userKey: string, data: object) => {
+  const collectionRef = collection(db, collectionKey);
+  const batch = writeBatch(db);
+
+  const docRef = doc(collectionRef, userKey);
+  batch.set(docRef, data);
+
+  await batch.commit();
+
+  console.log("Finalizado");  
+}
+
+
 export const createUserDocument = async (user: User) => {
   const userDocRef = doc(db, "users", user.uid);
 
@@ -75,6 +91,17 @@ export const createUserDocument = async (user: User) => {
     }
   }
 };
+
+export const fetchFirestoreApartments = async () => {
+  const currentUser = auth.currentUser;
+  if (!currentUser) return [];
+
+  const apartmentDocRef = doc(db, "apartments", currentUser.uid);
+  const dataSnapshot = await getDoc(apartmentDocRef);
+  const data = dataSnapshot.data();  
+  
+  return data?.apartments;
+}
 
 export const fetchFirestoreData = async () => {
   const currentUser = auth.currentUser;
