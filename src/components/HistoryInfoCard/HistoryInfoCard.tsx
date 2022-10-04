@@ -17,7 +17,10 @@ const HistoryInfoCard = ({
   numero,
   complemento,
   entrada,
-  saida
+  saida,
+  visitando,
+  visitado,
+  tipoDaVisita
 }: HistoryCardProps) => {
   const { setHistoryCardInfoModalId } = useContext(DataContext);
 
@@ -64,10 +67,26 @@ const HistoryInfoCard = ({
 
         <span className="create-guest__section-title">Visita</span>
 
+        <div
+          style={{ display: "flex", justifyContent: "flex-start", gap: "4rem", width: "100%" }}
+        >
+          <div className="guestinfo__info">
+            <h2 className="guestinfo__title">Visitou</h2>
+            <p className="guestinfo__description card__date">
+              {visitado} – Apart. {visitando}
+            </p>
+          </div>
+
+          <div className="guestinfo__info">
+            <h2 className="guestinfo__title">Visitante é</h2>
+            <p className="guestinfo__description card__date">{tipoDaVisita}</p>
+          </div>
+        </div>
+
         <div className="guestinfo__info">
           <h2 className="guestinfo__title">Entrou</h2>
           <p className="guestinfo__description card__date">
-            { formatDate(entrada) }
+            {formatDate(entrada)}
           </p>
         </div>
         <div className="guestinfo__info">

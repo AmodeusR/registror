@@ -6,6 +6,7 @@ import { formatAddress } from "../../utils/formatAddress";
 import { formatDateRelative } from "../../utils/formatDate";
 import DataContext from "../../contexts/data.context";
 import { useContext } from "react";
+import { capitalize } from "../../utils/capitalize";
 
 const HistoryCard = ({
   id,
@@ -18,7 +19,10 @@ const HistoryCard = ({
   numero,
   complemento,
   entrada,
-  saida
+  saida,
+  visitando,
+  visitado,
+  tipoDaVisita
 }: HistoryCardProps) => {
   const { setHistoryCardInfoModalId } = useContext(DataContext);
 
@@ -50,7 +54,14 @@ const HistoryCard = ({
 
       <div className="card__section">
         <span className="card__label">visitando</span>
-        <p className="card__info">{formatAddress({cidade, rua, numero})}</p>
+        <p className="card__info capitalize">{visitado} - Apart. {visitando}</p>
+      </div>
+
+      <div className="card__vertical-line" />
+
+      <div className="card__section">
+        <span className="card__label">visitante é</span>
+        <p className="card__info capitalize">{tipoDaVisita && capitalize(tipoDaVisita)}</p>
       </div>
 
       <div className="card__vertical-line" />
