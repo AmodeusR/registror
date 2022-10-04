@@ -18,11 +18,17 @@ const VisitorInfoCard = ({
   numero,
   complemento,
   entrada,
+  visitando,
+  visitado,
+  tipoDaVisita,
 }: VisitorCardProps) => {
-  const { setVisitorCardInfoModalId, fetchedData, setFetchedData } = useContext(DataContext);
+  const { setVisitorCardInfoModalId, fetchedData, setFetchedData } =
+    useContext(DataContext);
 
   const handleVisitFinish = async () => {
-    const userToFinishVisit = fetchedData.visiting.filter(visitor => visitor.cpf === cpf)[0];
+    const userToFinishVisit = fetchedData.visiting.filter(
+      (visitor) => visitor.cpf === cpf
+    )[0];
 
     try {
       await finishVisit(userToFinishVisit);
@@ -31,11 +37,9 @@ const VisitorInfoCard = ({
       const updatedData = await fetchFirestoreData();
       setFetchedData(updatedData);
     } catch (error) {
-      console.log(error);      
+      console.log(error);
     }
-    
-  }
-
+  };
 
   const handleModalClose = (e: MouseEvent) => {
     const target = e.target as HTMLElement;
@@ -62,7 +66,7 @@ const VisitorInfoCard = ({
           src={guestPicture || profilePicturePlaceholder}
           alt=""
           style={{
-            cursor: "auto"
+            cursor: "auto",
           }}
         />
 
@@ -79,14 +83,34 @@ const VisitorInfoCard = ({
 
         <span className="create-guest__section-title">Visita</span>
 
+        <div
+          style={{ display: "flex", justifyContent: "flex-start", gap: "4rem", width: "100%" }}
+        >
+          <div className="guestinfo__info">
+            <h2 className="guestinfo__title">Visitando</h2>
+            <p className="guestinfo__description card__date">
+              {visitado} – Apart. {visitando}
+            </p>
+          </div>
+
+          <div className="guestinfo__info">
+            <h2 className="guestinfo__title">Visitante é</h2>
+            <p className="guestinfo__description card__date">{tipoDaVisita}</p>
+          </div>
+        </div>
+
         <div className="guestinfo__info">
           <h2 className="guestinfo__title">Entrou</h2>
           <p className="guestinfo__description card__date">
-            { formatDate(entrada) }
+            {formatDate(entrada)}
           </p>
         </div>
         <div className="guestinfo__buttons">
-          <button type="button" className="guestinfo__button" onClick={handleVisitFinish}>
+          <button
+            type="button"
+            className="guestinfo__button"
+            onClick={handleVisitFinish}
+          >
             Encerrar visita
           </button>
         </div>

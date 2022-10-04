@@ -5,6 +5,7 @@ import ProfilePlaceholder from "../../assets/profile-placeholder.webp";
 import { formatDateRelative, formatDate } from "../../utils/formatDate";
 import { useContext } from "react";
 import DataContext from "../../contexts/data.context";
+import { capitalize } from "../../utils/capitalize";
 
 const VisitorCard = ({
   guestPicture,
@@ -15,7 +16,10 @@ const VisitorCard = ({
   rua,
   numero,
   complemento,
-  entrada
+  entrada,
+  visitando,
+  visitado,
+  tipoDaVisita
 }: VisitorCardProps) => {
   const { setVisitorCardInfoModalId } = useContext(DataContext);
 
@@ -43,10 +47,17 @@ const VisitorCard = ({
       </div>
 
       <div className="card__vertical-line" />
+      
+      <div className="card__section">
+        <span className="card__label">visitante é</span>
+        <p className="card__info">{capitalize(tipoDaVisita)}</p>
+      </div>
+
+      <div className="card__vertical-line" />
 
       <div className="card__section">
         <span className="card__label">visitando</span>
-        <p className="card__info">{formatAddress({cidade, rua, numero})}</p>
+        <p className="card__info capitalize">{visitado} - Apart. {visitando}</p>
       </div>
 
       <div className="card__vertical-line" />
@@ -55,6 +66,7 @@ const VisitorCard = ({
         <span className="card__label">entrada</span>
         <p className="card__info">{formatDateRelative(entrada)}</p>
       </div>
+
     </button>
   );
 };
