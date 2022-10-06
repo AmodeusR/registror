@@ -1,14 +1,11 @@
 import { Timestamp } from "firebase/firestore";
 import { useContext, useState } from "react";
 import Select from "react-select";
-import DataContext from "../../contexts/data.context";
+import DataContext, { ApartmentOption } from "../../contexts/data.context";
 import { fetchFirestoreData, registerVisit } from "../../utils/firebase";
 import { GuestCardProps } from "../Cards/cards.types";
 
-interface ApartmentOption {
-  readonly label: number;
-  readonly value: number;
-}
+
 
 interface VisitorIsOption {
   readonly label: string;
