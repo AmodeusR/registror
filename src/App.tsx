@@ -90,7 +90,9 @@ function App() {
     setSelectedHistoryGuest();
   }, [historyCardInfoModalId]);
 
-  useEffect(() => {
+  useEffect(() => {    
+    // uploadContent("apartments", "userKey", aparts);
+
     const unsubscribe = onAuthStateChangedListener(async (user) => {
       setUser(user);
 
