@@ -34,7 +34,7 @@ interface ContextType {
 
 const DataContext = createContext({} as ContextType);
 
-interface ApartmentOption {
+export interface ApartmentOption {
   readonly label: number;
   readonly value: number;
 }
