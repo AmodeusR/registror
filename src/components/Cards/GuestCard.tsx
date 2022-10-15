@@ -45,7 +45,7 @@ const GuestCard = ({
 
       <div className="card__section">
         <span className="card__label">endereço</span>
-        <p className="card__info">{formatAddress({cidade, rua, numero})}</p>
+        <p className="card__info capitalize">{formatAddress({cidade, rua, numero})}</p>
       </div>
     </button>
   );

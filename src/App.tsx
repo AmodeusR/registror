@@ -91,7 +91,7 @@ function App() {
   }, [historyCardInfoModalId]);
 
   useEffect(() => {    
-    // uploadContent("apartments", "userKey", aparts);
+    // uploadContent("users", "userKey", filetoUpload);
 
     const unsubscribe = onAuthStateChangedListener(async (user) => {
       setUser(user);
