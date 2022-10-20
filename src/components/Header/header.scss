@@ -16,6 +16,17 @@
     align-self: flex-start;
   }
 
+  &__title-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: .3rem;
+  }
+
+  &__condominium-name {
+    color: var(--neutral-white-fade);
+    width: 80%;
+  }
+
   &__search {
     display: flex;
     flex-direction: column;

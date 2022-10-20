@@ -1,17 +1,18 @@
 
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 import DataContext from "../../contexts/data.context";
 import { userSignOut } from "../../utils/firebase";
+import { renderCondominiumName } from "../../utils/renderCondominiumName";
 import CreateGuest from "../CreateGuest/CreateGuest";
 import "./header.scss";
-
 
 const Header = () => {
   const input = useRef<HTMLInputElement>(null);
   const { isRegisterModalOpen, setIsRegisterModalOpen, search, setSearch, user } = useContext(DataContext);
   const [cookies, setCookie, removeCookie ] = useCookies(["user"]);
+  const [userUid, setUserUid] = useState<string | undefined>("");
   const navigate = useNavigate();
   
   const handleSignOut = async () => {
@@ -38,12 +39,16 @@ const Header = () => {
   useEffect(() => {
     document.addEventListener("keydown", handleInputFocus);
 
+    setUserUid(user?.uid);
     return () => document.removeEventListener("keydown", handleInputFocus);
   }, []);
 
   return (
     <header className="header">
-      <h1 className="header__title">Registro de Visitantes</h1>
+      <div className="header__title-wrapper">
+        <h1 className="header__title">Registro de Visitantes</h1>
+        { renderCondominiumName(userUid)}
+      </div>
       <div className="header__search">
         <label htmlFor="busca">Pesquisa</label>
         <input type="text" name="busca" id="busca" ref={input} value={search} onChange={(e) => setSearch(e.target.value)} />
