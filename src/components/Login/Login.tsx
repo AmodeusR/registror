@@ -35,6 +35,7 @@ const Login = () => {
 
   return (
     <div className="login-background">
+      <h1 className="login__title">Sistema de cadastro de visitantes</h1>
       <div className="login-container">
         <div className="login__buttons">
           <button
