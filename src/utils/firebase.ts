@@ -18,7 +18,9 @@ import {
   arrayUnion,
   arrayRemove,
   writeBatch,
-  collection
+  collection,
+  getDocs,
+  DocumentData
 } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
@@ -75,21 +77,88 @@ export const uploadContent = async (collectionKey: string, userKey: string, data
 
 
 export const createUserDocument = async (user: User) => {
-  const userDocRef = doc(db, "users", user.uid);
+  const docsToCreate = ["guests", "visiting", "history"];
+  docsToCreate.forEach(async (docToCreate) => {
+    const docRef = doc(db, "users", user.uid, "data", docToCreate);
+    const docSnapshot = await getDoc(docRef);
 
-  const dataSnapshot = await getDoc(userDocRef);
-
-  if (!dataSnapshot.exists()) {
-    try {
-      await setDoc(userDocRef, {
-        guests: [],
-        visiting: [],
-        history: [],
-      });
-    } catch (error) {
-      console.log(error);
+    if (!docSnapshot.exists()) {
+      try {
+        await setDoc(docRef, {
+          excerpt1: []
+        });
+      } catch (error) {
+        console.log(error);
+      }
     }
-  }
+  });
+
+  // Legado
+
+  // const userDocRef = doc(db, "users", user.uid);
+
+  // const dataSnapshot = await getDoc(userDocRef);
+
+  // if (!dataSnapshot.exists()) {
+  //   try {
+  //     await setDoc(userDocRef, {
+  //       guests: [],
+  //       visiting: [],
+  //       history: [],
+  //     });
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
+};
+
+export const fetchFirestoreData = async () => {
+  const currentUser = auth.currentUser;
+  if (!currentUser) return [];
+
+  const userDocRef = doc(db, "users", currentUser.uid);
+  const dataSnapshot = await getDoc(userDocRef);
+  const data = dataSnapshot.data();  
+
+  const docsToCreate = ["guests", "visiting", "history"];
+
+  const newData = await docsToCreate.reduce(async (acc, docToCreate) => {
+    const docRef = doc(db, "users", currentUser.uid, "data", docToCreate);
+    const docSnapshot = await getDoc(docRef);
+    const docData = docSnapshot.data();
+
+    if (!docSnapshot.exists()) {
+      const finalData = data ? data[docToCreate] : [];
+      try {
+        await setDoc(docRef, {
+          excerpt1: finalData
+        });
+
+        console.log("feito!")
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    
+    if (docData !== undefined) {
+      const docKeys = docData && Object.keys(docData);
+      const result = docKeys?.reduce((acc, docKey) => {
+        
+        return [...acc, ...docData[docKey]];
+      }, [] as object[]);
+
+      const cumulativeData = await acc;
+      
+      return {...cumulativeData, [docToCreate]: result};
+    }
+
+    return acc;
+  }, {});
+
+  console.log(newData);
+  
+  
+  return Object(data);
 };
 
 export const fetchFirestoreApartments = async () => {
@@ -103,16 +172,6 @@ export const fetchFirestoreApartments = async () => {
   return data?.apartments;
 }
 
-export const fetchFirestoreData = async () => {
-  const currentUser = auth.currentUser;
-  if (!currentUser) return [];
-
-  const userDocRef = doc(db, "users", currentUser.uid);
-  const dataSnapshot = await getDoc(userDocRef);
-  const data = dataSnapshot.data();
-  
-  return Object(data);
-};
 
 export const createNewGuest = async (newGuest: GuestCardProps) => {
   const currentUser = auth.currentUser;
