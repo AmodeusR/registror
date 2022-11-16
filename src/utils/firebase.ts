@@ -19,9 +19,7 @@ import {
   arrayRemove,
   writeBatch,
   collection,
-  getDocs,
-  DocumentData,
-  CollectionReference
+  getDocs
 } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
@@ -142,22 +140,16 @@ export const fetchFirestoreData = async () => {
 
   
 
-  const finalData = await docsToCreate.reduce(async (acc, colToNormalize) => {
+  const finalData = await docsToCreate.reduce(async (acc, collToNormalize) => {
 
-      const colRef = collection(db, "users", currentUser.uid, colToNormalize);
-      const colSnapshot = await getDocs(colRef);
-
-      const dataToNormalize = colSnapshot.docs.map(col => col.data());
-
-      const normalizedData = normalizeData(dataToNormalize);
+      const collRef = collection(db, "users", currentUser.uid, collToNormalize);
+      const collSnapshot = await getDocs(collRef);
+      const normalizedData = normalizeData(collSnapshot);
       
       const awaitedAcc = await acc;
       
-    return {...awaitedAcc, [colToNormalize]: normalizedData};
-  }, {});
-  
-  console.log(finalData);
-  
+    return {...awaitedAcc, [collToNormalize]: normalizedData};
+  }, {});  
   
   return Object(data);
 };
@@ -177,40 +169,35 @@ export const createNewGuest = async (newGuest: GuestCardProps) => {
   const currentUser = auth.currentUser;
   if (!currentUser) return;
 
-  const docRef = doc(db, "users", currentUser.uid, "data", "guests");
-
-  const dataSnapshot = await getDoc(docRef);
-  const data = dataSnapshot.data();  
-  // const guests = normalizeData(data);
+  const collRef = collection(db, "users", currentUser.uid, "guests");
+  const collSnapshot = await getDocs(collRef);
+  const { normalizedData: guests, mappedDocs } = normalizeData(collSnapshot, true);
   
   const guestsCPF = guests?.map((guest: GuestCardProps) => guest.cpf);
   const isCPFRegistered = guestsCPF.some(
     (guestCPF: number) => guestCPF === newGuest.cpf
-  );
-
-  if (isCPFRegistered) {
-    return "Este CPF já está registrado";
-  }
+    );
+    
+    if (isCPFRegistered) {
+      return "Este CPF já está registrado";
+    }
   
-  if (!data) return;
+  const excerptQuantity = mappedDocs.length;
+  const lastExcerptData = mappedDocs[mappedDocs.length - 1].data;
+  const excerptToAddData = lastExcerptData.length < 100 ? `excerpt${excerptQuantity - 1}` : `excerpt${excerptQuantity}`;
 
-  const guestsExcerptsKeys = Object.keys(data);  
-  const lastExcerpt = guestsExcerptsKeys[guestsExcerptsKeys.length - 1] 
-  const lastExcerptData = data[lastExcerpt];
-
-  console.log(guestsExcerptsKeys);
-  
-  return
   try {
-    if (lastExcerptData.length <= 12) {
+    const docRef = doc(db, "users", currentUser.uid, "guests", excerptToAddData);
+    const docSnapshot = await getDoc(docRef);
+
+    if (docSnapshot.exists()) {
       await updateDoc(docRef, {
-        [lastExcerpt]: arrayUnion(newGuest)
+        data: arrayUnion(newGuest)
       });
     } else {
-      const newExcerpt = "excerpt" + guestsExcerptsKeys.length;
-      await updateDoc(docRef, {
-        [newExcerpt]: arrayUnion(newGuest)
-      });
+      await setDoc(docRef, {
+        data: [newGuest]
+      })
     }
   } catch (error) {
     console.log(error);
