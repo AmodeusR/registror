@@ -19,7 +19,8 @@ import {
   arrayRemove,
   writeBatch,
   collection,
-  getDocs
+  getDocs,
+  DocumentData
 } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
@@ -149,9 +150,9 @@ export const fetchFirestoreData = async () => {
       const awaitedAcc = await acc;
       
     return {...awaitedAcc, [collToNormalize]: normalizedData};
-  }, {});  
+  }, {});
   
-  return Object(data);
+  return finalData;
 };
 
 export const fetchFirestoreApartments = async () => {
@@ -183,7 +184,7 @@ export const createNewGuest = async (newGuest: GuestCardProps) => {
     }
   
   const excerptQuantity = mappedDocs.length;
-  const lastExcerptData = mappedDocs[mappedDocs.length - 1].data;
+  const lastExcerptData = mappedDocs[excerptQuantity - 1].data;
   const excerptToAddData = lastExcerptData.length < 100 ? `excerpt${excerptQuantity - 1}` : `excerpt${excerptQuantity}`;
 
   try {
@@ -210,8 +211,8 @@ export const registerVisit = async (visitorToRegister: VisitorCardProps) => {
   const currentUser = auth.currentUser;
   if (!currentUser) return;
 
-  const userDocRef = doc(db, "users", currentUser.uid, "visiting", "excerpt0");
-  const dataSnapshot = await getDoc(userDocRef);
+  const visitingDocRef = doc(db, "users", currentUser.uid, "visiting", "excerpt0");
+  const dataSnapshot = await getDoc(visitingDocRef);
   const visiting = dataSnapshot.data()?.data;
   const isVisitorAlreadyVisiting = visiting.some((visitor: VisitorCardProps) => visitor.cpf === visitorToRegister.cpf);  
   
@@ -221,8 +222,8 @@ export const registerVisit = async (visitorToRegister: VisitorCardProps) => {
   }
 
   try {
-    await updateDoc(userDocRef, {
-      visiting: arrayUnion(visitorToRegister)
+    await updateDoc(visitingDocRef, {
+      data: arrayUnion(visitorToRegister)
     });
   } catch (error) {
     console.log(error);
@@ -233,18 +234,34 @@ export const finishVisit = async (visitor: VisitorCardProps) => {
   const currentUser = auth.currentUser;
   if (!currentUser) return;
 
-  const userDocRef = doc(db, "users", currentUser.uid);
+  const visitingDocRef = doc(db, "users", currentUser.uid, "visiting", "excerpt0");
+  
+  const historyCollRef = collection(db, "users", currentUser.uid, "history");
+  const historyCollRefSnapshot = await getDocs(historyCollRef);
+  const { mappedDocs } = normalizeData(historyCollRefSnapshot, true);
+  
+  const excerptQuantity = mappedDocs.length;
+  const lastExcerptData = mappedDocs[excerptQuantity - 1].data;
+  const excerptToAddData = lastExcerptData.length < 100 ? `excerpt${excerptQuantity - 1}` : `excerpt${excerptQuantity}`;
 
   const historyVisitor = {...visitor, saida: new Date(), id: v4()};
-
+  
+  const historyDocRef = doc(db, "users", currentUser.uid, "history", excerptToAddData);
+  const historyDocSnapshot = await getDoc(historyDocRef);
   try {
-    await updateDoc(userDocRef, {
-      visiting: arrayRemove(visitor)
-    })
-
-    await updateDoc(userDocRef, {
-      history: arrayUnion(historyVisitor)
-    })
+    await updateDoc(visitingDocRef, {
+      data: arrayRemove(visitor)
+    });
+    
+    if (historyDocSnapshot.exists()) {
+      await updateDoc(historyDocRef, {
+        data: arrayUnion(historyVisitor)
+      });
+    } else {
+      await setDoc(historyDocRef, {
+        data: [historyVisitor]
+      });
+    }
   } catch (error) {
     console.log(error);    
   }
@@ -254,16 +271,22 @@ export const finishVisit = async (visitor: VisitorCardProps) => {
 export const updateGuestPicture = async (guestToUpdate: GuestCardProps) => {
   const currentUser = auth.currentUser;
   if (!currentUser) return;
+  
+  const guestsCollRef = collection(db, "users", currentUser.uid, "guests");
+  const guestsCollSnapshot = await getDocs(guestsCollRef);
+  const { mappedDocs } = normalizeData(guestsCollSnapshot, true);
+  
+  const excerptGuestToUpdateIsIn = mappedDocs.findIndex(
+    (mappedDoc: MappedDocProps) => mappedDoc.data.some((guest: GuestCardProps) => guest.cpf === guestToUpdate.cpf)
+  );
+  const guestsExcerptDocRef = doc(db, "users", currentUser.uid, "guests", `excerpt${excerptGuestToUpdateIsIn}`);
+  const guestsExcerptSnapshot = await getDoc(guestsExcerptDocRef);
+  const guestsExcerptData = guestsExcerptSnapshot.data();
+  const guests = guestsExcerptData?.data.filter((guest: GuestCardProps) => guest.cpf !== guestToUpdate.cpf);
 
-  const userDocRef = doc(db, "users", currentUser.uid);
-
-  const dataSnapshot = await getDoc(userDocRef);
-  const data = dataSnapshot.data();
-  const guests = data?.guests.filter((guest: GuestCardProps) => guest.cpf !== guestToUpdate.cpf);
-    
   try {
-    await updateDoc(userDocRef, {
-      guests: [...guests, guestToUpdate]
+    await updateDoc(guestsExcerptDocRef, {
+      data: [...guests, guestToUpdate]
     });
   } catch (error) {
     console.log(error);
@@ -274,11 +297,18 @@ export const removeGuest = async (guestToRemove: GuestCardProps) => {
   const currentUser = auth.currentUser;
   if (!currentUser) return;
 
-  const userDocRef = doc(db, "users", currentUser.uid);
+  const guestsCollRef = collection(db, "users", currentUser.uid, "guests");
+  const guestsCollSnapshot = await getDocs(guestsCollRef);
+  const { mappedDocs } = normalizeData(guestsCollSnapshot, true);
+  
+  const excerptGuestToUpdateIsIn = mappedDocs.findIndex(
+    (mappedDoc: MappedDocProps) => mappedDoc.data.some((guest: GuestCardProps) => guest.cpf === guestToRemove.cpf)
+  );
+  const guestsExcerptDocRef = doc(db, "users", currentUser.uid, "guests", `excerpt${excerptGuestToUpdateIsIn}`);
 
   try {
-    await updateDoc(userDocRef, {
-      guests: arrayRemove(guestToRemove)
+    await updateDoc(guestsExcerptDocRef, {
+      data: arrayRemove(guestToRemove)
     });
   } catch (error) {
     console.log(error);
@@ -315,4 +345,8 @@ interface UserDataProps {
 interface UploadDataProps {
   img: Blob;
   userID: number;
+}
+
+interface MappedDocProps {
+  data: [];
 }
