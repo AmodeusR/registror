@@ -210,9 +210,9 @@ export const registerVisit = async (visitorToRegister: VisitorCardProps) => {
   const currentUser = auth.currentUser;
   if (!currentUser) return;
 
-  const userDocRef = doc(db, "users", currentUser.uid);
+  const userDocRef = doc(db, "users", currentUser.uid, "visiting", "excerpt0");
   const dataSnapshot = await getDoc(userDocRef);
-  const visiting = dataSnapshot.data()?.visiting;
+  const visiting = dataSnapshot.data()?.data;
   const isVisitorAlreadyVisiting = visiting.some((visitor: VisitorCardProps) => visitor.cpf === visitorToRegister.cpf);  
   
   if (isVisitorAlreadyVisiting) {
