@@ -20,10 +20,12 @@ import {
   writeBatch,
   collection,
   getDocs,
-  DocumentData
+  DocumentData,
+  CollectionReference
 } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
+import { normalizeData } from "./normalizeData";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAdOdJBtVMM0VHzpIyDuYIuV_9h6GgJDe0",
@@ -79,13 +81,13 @@ export const uploadContent = async (collectionKey: string, userKey: string, data
 export const createUserDocument = async (user: User) => {
   const docsToCreate = ["guests", "visiting", "history"];
   docsToCreate.forEach(async (docToCreate) => {
-    const docRef = doc(db, "users", user.uid, "data", docToCreate);
+    const docRef = doc(db, "users", user.uid, docToCreate);
     const docSnapshot = await getDoc(docRef);
 
     if (!docSnapshot.exists()) {
       try {
         await setDoc(docRef, {
-          excerpt1: []
+          excerpt0: []
         });
       } catch (error) {
         console.log(error);
@@ -118,44 +120,43 @@ export const fetchFirestoreData = async () => {
 
   const userDocRef = doc(db, "users", currentUser.uid);
   const dataSnapshot = await getDoc(userDocRef);
-  const data = dataSnapshot.data();  
-
+  const data = dataSnapshot.data();
+  
   const docsToCreate = ["guests", "visiting", "history"];
 
-  const newData = await docsToCreate.reduce(async (acc, docToCreate) => {
-    const docRef = doc(db, "users", currentUser.uid, "data", docToCreate);
+  docsToCreate.forEach(async (docToCreate) => {
+    const docRef = doc(db, "users", currentUser.uid, docToCreate, "excerpt0");
     const docSnapshot = await getDoc(docRef);
-    const docData = docSnapshot.data();
 
     if (!docSnapshot.exists()) {
       const finalData = data ? data[docToCreate] : [];
       try {
         await setDoc(docRef, {
-          excerpt1: finalData
+          data: finalData
         });
-
-        console.log("feito!")
       } catch (error) {
         console.log(error);
       }
     }
-    
-    if (docData !== undefined) {
-      const docKeys = docData && Object.keys(docData);
-      const result = docKeys?.reduce((acc, docKey) => {
-        
-        return [...acc, ...docData[docKey]];
-      }, [] as object[]);
+  });
 
-      const cumulativeData = await acc;
+  
+
+  const finalData = await docsToCreate.reduce(async (acc, colToNormalize) => {
+
+      const colRef = collection(db, "users", currentUser.uid, colToNormalize);
+      const colSnapshot = await getDocs(colRef);
+
+      const dataToNormalize = colSnapshot.docs.map(col => col.data());
+
+      const normalizedData = normalizeData(dataToNormalize);
       
-      return {...cumulativeData, [docToCreate]: result};
-    }
-
-    return acc;
+      const awaitedAcc = await acc;
+      
+    return {...awaitedAcc, [colToNormalize]: normalizedData};
   }, {});
-
-  console.log(newData);
+  
+  console.log(finalData);
   
   
   return Object(data);
@@ -172,16 +173,28 @@ export const fetchFirestoreApartments = async () => {
   return data?.apartments;
 }
 
+// const normalizeData = (data: DocumentData | undefined): DocumentData | undefined => {
+//   if (!data) return;
+//   const dataObjKeys = Object.keys(data);
+//   const result = dataObjKeys.reduce((acc, dataObjKey) => {
+
+//     return [...acc, ...data[dataObjKey]]
+//   }, [] as object[]);
+
+//   return result;
+// }
 
 export const createNewGuest = async (newGuest: GuestCardProps) => {
   const currentUser = auth.currentUser;
   if (!currentUser) return;
 
-  const userDocRef = doc(db, "users", currentUser.uid);
+  const docRef = doc(db, "users", currentUser.uid, "data", "guests");
 
-  const dataSnapshot = await getDoc(userDocRef);
-  const data = dataSnapshot.data();
-  const guestsCPF = data?.guests.map((guest: GuestCardProps) => guest.cpf);
+  const dataSnapshot = await getDoc(docRef);
+  const data = dataSnapshot.data();  
+  // const guests = normalizeData(data);
+  
+  const guestsCPF = guests?.map((guest: GuestCardProps) => guest.cpf);
   const isCPFRegistered = guestsCPF.some(
     (guestCPF: number) => guestCPF === newGuest.cpf
   );
@@ -190,10 +203,26 @@ export const createNewGuest = async (newGuest: GuestCardProps) => {
     return "Este CPF já está registrado";
   }
   
+  if (!data) return;
+
+  const guestsExcerptsKeys = Object.keys(data);  
+  const lastExcerpt = guestsExcerptsKeys[guestsExcerptsKeys.length - 1] 
+  const lastExcerptData = data[lastExcerpt];
+
+  console.log(guestsExcerptsKeys);
+  
+  return
   try {
-    await updateDoc(userDocRef, {
-      guests: arrayUnion(newGuest)
-    });
+    if (lastExcerptData.length <= 12) {
+      await updateDoc(docRef, {
+        [lastExcerpt]: arrayUnion(newGuest)
+      });
+    } else {
+      const newExcerpt = "excerpt" + guestsExcerptsKeys.length;
+      await updateDoc(docRef, {
+        [newExcerpt]: arrayUnion(newGuest)
+      });
+    }
   } catch (error) {
     console.log(error);
   }
