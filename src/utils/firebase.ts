@@ -173,17 +173,6 @@ export const fetchFirestoreApartments = async () => {
   return data?.apartments;
 }
 
-// const normalizeData = (data: DocumentData | undefined): DocumentData | undefined => {
-//   if (!data) return;
-//   const dataObjKeys = Object.keys(data);
-//   const result = dataObjKeys.reduce((acc, dataObjKey) => {
-
-//     return [...acc, ...data[dataObjKey]]
-//   }, [] as object[]);
-
-//   return result;
-// }
-
 export const createNewGuest = async (newGuest: GuestCardProps) => {
   const currentUser = auth.currentUser;
   if (!currentUser) return;
