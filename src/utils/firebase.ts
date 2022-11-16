@@ -80,37 +80,19 @@ export const uploadContent = async (collectionKey: string, userKey: string, data
 export const createUserDocument = async (user: User) => {
   const docsToCreate = ["guests", "visiting", "history"];
   docsToCreate.forEach(async (docToCreate) => {
-    const docRef = doc(db, "users", user.uid, docToCreate);
+    const docRef = doc(db, "users", user.uid, docToCreate, "excerpt0");
     const docSnapshot = await getDoc(docRef);
 
     if (!docSnapshot.exists()) {
       try {
         await setDoc(docRef, {
-          excerpt0: []
+          data: []
         });
       } catch (error) {
         console.log(error);
       }
     }
   });
-
-  // Legado
-
-  // const userDocRef = doc(db, "users", user.uid);
-
-  // const dataSnapshot = await getDoc(userDocRef);
-
-  // if (!dataSnapshot.exists()) {
-  //   try {
-  //     await setDoc(userDocRef, {
-  //       guests: [],
-  //       visiting: [],
-  //       history: [],
-  //     });
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
 };
 
 export const fetchFirestoreData = async () => {
