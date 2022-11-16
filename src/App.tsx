@@ -99,7 +99,7 @@ function App() {
       if (user) {
         const data = await fetchFirestoreData();
         const apartmentsData = await fetchFirestoreApartments();
-
+        
         if (!data) return;
         setFetchedData(data);
         setFetchedApartments(apartmentsData);

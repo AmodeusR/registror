@@ -134,7 +134,7 @@ export const fetchFirestoreData = async () => {
     return {...awaitedAcc, [collToNormalize]: normalizedData};
   }, {});
   
-  return finalData;
+  return Object(finalData);
 };
 
 export const fetchFirestoreApartments = async () => {
